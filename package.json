@@ -14,6 +14,7 @@
     "preinstall": "sh env.sh",
     "env": "sh env.sh",
     "emulator": "yarn workspace firebase emulator",
+    "generate:env-type": "gen-env-types -o packages/shared/@types/env.d.ts .env",
     "web": "yarn workspace web dev",
     "web:build": "yarn workspace web build",
     "web:start": "yarn workspace web start",
@@ -46,5 +47,8 @@
     "stylelint-config-standard": "^25.0.0",
     "stylelint-order": "^5.0.0",
     "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "gen-env-types": "^1.3.4"
   }
 }
