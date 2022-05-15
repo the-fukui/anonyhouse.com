@@ -4,5 +4,6 @@
     "next": {
       "rootDir": "./packages/web/"
     }
-  }
+  },
+  "root": true
 }
