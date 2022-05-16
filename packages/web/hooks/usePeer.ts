@@ -8,39 +8,49 @@ type CreatePeer = ({
 }: {
   initiator: boolean
   stream?: MediaStream
+  onSignal: (data: SignalData, ID: string) => void
   onStream: (stream: MediaStream) => void
   onError?: (error: Error) => void
-}) => Promise<{ data: SignalData; ID: string }>
+}) => { ID: string }
 
 type SetRemote = ({ data, ID }: { data: SignalData; ID: string }) => void
+
+type RemovePeer = ({ ID }: { ID: string }) => void
 
 export const usePeer = () => {
   const [peers, setPeers] = useState<{ [key: string]: Instance }>({})
 
-  const createPeer: CreatePeer = ({ initiator, stream, onStream, onError }) =>
-    new Promise((resolve) => {
-      const peer = new Peer({
-        initiator,
-        stream,
-      })
-
-      peer.on('signal', (data) => {
-        const ID = uuid()
-        setPeers((peers) => {
-          peers[ID] = peer
-          return peers
-        })
-        resolve({ data, ID })
-      })
-
-      peer.on('stream', onStream)
-
-      peer.on('close', () => {
-        peer.destroy()
-      })
-
-      onError && peer.on('error', onError)
+  const createPeer: CreatePeer = ({
+    initiator,
+    stream,
+    onSignal,
+    onStream,
+    onError,
+  }) => {
+    const peer = new Peer({
+      initiator,
+      stream,
+      trickle: false,
     })
+    const ID = uuid()
+
+    setPeers((peers) => {
+      peers[ID] = peer
+      return peers
+    })
+
+    peer.on('signal', onSignal)
+
+    peer.on('stream', onStream)
+
+    peer.on('close', () => {
+      peer.destroy()
+    })
+
+    onError && peer.on('error', onError)
+
+    return { ID }
+  }
 
   const setRemote: SetRemote = ({ data, ID }) => {
     const peer = peers[ID]
@@ -49,9 +59,15 @@ export const usePeer = () => {
     peer.signal(data)
   }
 
+  const removePeer: RemovePeer = ({ ID }) => {
+    peers[ID]?.destroy()
+    delete peers[ID]
+  }
+
   return {
     createPeer,
     setRemote,
+    removePeer,
     peers,
   }
 }

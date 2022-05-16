@@ -4,19 +4,23 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect } from 'react'
+import { SignalData } from 'simple-peer'
 
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-  const { createPeer, peers } = usePeer()
+  const { createPeer, peers, removePeer } = usePeer()
   const onStream = (stream: MediaStream) => {}
+  const onSignal = (data: SignalData, ID: string) => {}
 
   useEffect(() => {
-    ;(async () => {
-      const { data, ID } = await createPeer({ initiator: true, onStream })
-      console.log({ data, ID })
-    })()
-  }, [])
+    const { ID } = createPeer({ initiator: true, onStream, onSignal })
+    console.log(peers)
+
+    return () => {
+      removePeer({ ID })
+    }
+  }, [createPeer, removePeer])
 
   return (
     <div className={styles.container}>
