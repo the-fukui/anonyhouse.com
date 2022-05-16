@@ -1,4 +1,4 @@
-import { Database, ref, get } from 'firebase/database'
+import { Database, get, ref } from 'firebase/database'
 
 export class DatabaseCRUD {
   private _database: Database

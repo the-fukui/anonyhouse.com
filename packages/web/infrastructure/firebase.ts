@@ -1,9 +1,10 @@
+import { initializeApp } from 'firebase/app'
 import {
   Database,
-  getDatabase,
   connectDatabaseEmulator,
+  getDatabase,
 } from 'firebase/database'
-import { initializeApp } from 'firebase/app'
+
 import { DatabaseCRUD } from './database'
 
 export class Firebase {
