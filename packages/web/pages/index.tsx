@@ -9,10 +9,11 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   const { createPeer, peers } = usePeer()
+  const onStream = (stream: MediaStream) => {}
 
   useEffect(() => {
     ;(async () => {
-      const { data, ID } = await createPeer({ initiator: true })
+      const { data, ID } = await createPeer({ initiator: true, onStream })
       console.log({ data, ID })
     })()
   }, [])
