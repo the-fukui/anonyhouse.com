@@ -44,7 +44,7 @@ export const usePeer = () => {
     peer.on('stream', onStream)
 
     peer.on('close', () => {
-      peer.destroy()
+      removePeer({ ID })
     })
 
     onError && peer.on('error', onError)
