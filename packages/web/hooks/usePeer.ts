@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Peer, { Instance, SignalData } from 'simple-peer'
-import { v4 as uuid } from 'uuid'
 
 type CreatePeer = ({
   initiator,
@@ -8,14 +7,21 @@ type CreatePeer = ({
 }: {
   initiator: boolean
   stream?: MediaStream
-  onSignal: (data: SignalData, ID: string) => void
-  onStream: (stream: MediaStream) => void
-  onError?: (error: Error) => void
-}) => { ID: string }
+  peerID: string
+  onSignal: (data: SignalData, peerID: string) => void
+  onStream: (stream: MediaStream, peerID: string) => void
+  onError?: (error: Error, peerID: string) => void
+}) => void
 
-type SetRemote = ({ data, ID }: { data: SignalData; ID: string }) => void
+type SetRemote = ({
+  data,
+  peerID,
+}: {
+  data: SignalData
+  peerID: string
+}) => void
 
-type RemovePeer = ({ ID }: { ID: string }) => void
+type RemovePeer = ({ peerID }: { peerID: string }) => void
 
 export const usePeer = () => {
   const [peers, setPeers] = useState<{ [key: string]: Instance }>({})
@@ -23,6 +29,7 @@ export const usePeer = () => {
   const createPeer: CreatePeer = ({
     initiator,
     stream,
+    peerID,
     onSignal,
     onStream,
     onError,
@@ -32,36 +39,33 @@ export const usePeer = () => {
       stream,
       trickle: false,
     })
-    const ID = uuid()
 
     setPeers((peers) => {
-      peers[ID] = peer
+      peers[peerID] = peer
       return peers
     })
 
-    peer.on('signal', onSignal)
+    peer.on('signal', (data) => onSignal(data, peerID))
 
-    peer.on('stream', onStream)
+    peer.on('stream', (stream) => onStream(stream, peerID))
 
     peer.on('close', () => {
-      removePeer({ ID })
+      removePeer({ peerID })
     })
 
-    onError && peer.on('error', onError)
-
-    return { ID }
+    onError && peer.on('error', (error) => onError(error, peerID))
   }
 
-  const setRemote: SetRemote = ({ data, ID }) => {
-    const peer = peers[ID]
+  const setRemote: SetRemote = ({ data, peerID }) => {
+    const peer = peers[peerID]
     if (!peer) return
 
     peer.signal(data)
   }
 
-  const removePeer: RemovePeer = ({ ID }) => {
-    peers[ID]?.destroy()
-    delete peers[ID]
+  const removePeer: RemovePeer = ({ peerID }) => {
+    peers[peerID]?.destroy()
+    delete peers[peerID]
   }
 
   return {
