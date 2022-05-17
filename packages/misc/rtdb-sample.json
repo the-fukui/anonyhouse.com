@@ -1,0 +1,29 @@
+{
+    "threads": {
+        "{threadID}": {
+            "title": "スレッドタイトル",
+            "timestamp": 12345678,
+            "users": {
+                "{userID}": {
+                    "timestamp": 12345678
+                }
+            }
+        }
+    },
+    "signaling": {
+        "{userID}": {
+            "offeredBy": {
+                "{userID}": {
+                    "sdp": {},
+                    "timestamp": 12345678
+                }
+            },
+            "answeredBy": {
+                "{userID}": {
+                    "sdp": {},
+                    "timestamp": 12345678
+                }
+            }
+        }
+    }
+}
