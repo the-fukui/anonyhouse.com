@@ -16,10 +16,10 @@ export class DatabaseCRUD {
     this._database = database
   }
 
-  public get({ path }: { path: string }) {
+  public get<T>({ path }: { path: string }) {
     const dbRef = ref(this._database, path)
     return get(dbRef).then((snapshot) => {
-      if (snapshot.exists()) return snapshot.val()
+      if (snapshot.exists()) return snapshot.val() as T
       throw new Error('No data available')
     })
   }
@@ -37,13 +37,13 @@ export class DatabaseCRUD {
     })
   }
 
-  public set({
+  public set<T>({
     path,
     data,
     addTimestamp = false,
   }: {
     path: string
-    data: any
+    data: Omit<T, 'timestamp'>
     addTimestamp?: boolean
   }) {
     const dbRef = ref(this._database, path)
@@ -51,13 +51,13 @@ export class DatabaseCRUD {
     return set(dbRef, data)
   }
 
-  public push({
+  public push<T>({
     path,
     data,
     addTimestamp = false,
   }: {
     path: string
-    data: any
+    data: Omit<T, 'timestamp'>
     addTimestamp?: boolean
   }) {
     const dbRef = ref(this._database, path)

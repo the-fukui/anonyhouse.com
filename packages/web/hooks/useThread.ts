@@ -8,10 +8,14 @@ type UseThreadArguments = {
   threadID: string
 }
 
+type ThreadUser = {
+  ID: string
+} & Awaited<ReturnType<ThreadRepository['getUsers']>>['{userID}']
+
 export const useThread = ({ threadID }: UseThreadArguments) => {
   const myStream = useRef<MediaStream>()
   const myID = useRef<string>()
-  const initialUsers = useRef<{ ID: string; timestamp: number }[]>([])
+  const initialUsers = useRef<ThreadUser[]>([])
   const { createPeer, peers } = usePeer()
   const threadRepository = new ThreadRepository(threadID)
 
@@ -50,9 +54,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
     const users = await threadRepository.getUsers({
       threadID,
     })
-    initialUsers.current = Object.entries(
-      users as { [key: string]: { timestamp: number } },
-    ).map(([userID, values]) => {
+    initialUsers.current = Object.entries(users).map(([userID, values]) => {
       return { ID: userID, ...values }
     })
     return users

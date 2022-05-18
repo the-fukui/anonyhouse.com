@@ -15,7 +15,7 @@ export class ThreadRepository {
    */
   public registerUser({ threadID }: { threadID: string }) {
     return Firebase.instance.database
-      .push({
+      .push<EmptyObject>({
         path: `/threads/${threadID}/users/`,
         data: {},
         addTimestamp: true,
@@ -35,7 +35,9 @@ export class ThreadRepository {
    * ユーザー一覧を取得
    */
   public getUsers({ threadID }: { threadID: string }) {
-    return Firebase.instance.database.get({
+    return Firebase.instance.database.get<
+      RTDB.Tree['threads']['{threadID}']['users']
+    >({
       path: `/threads/${threadID}/users/`,
     })
   }
@@ -54,7 +56,10 @@ export class ThreadRepository {
     type: RTCSdpType
     sdp: string
   }) {
-    return Firebase.instance.database.set({
+    return Firebase.instance.database.set<
+      | RTDB.Tree['signaling']['{threadID}']['answeredBy']['{userID}']
+      | RTDB.Tree['signaling']['{threadID}']['offeredBy']['{userID}']
+    >({
       path: `/signaling/${targetID}/${type}edBy/${myID}`,
       data: { sdp },
       addTimestamp: true,
