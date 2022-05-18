@@ -12,7 +12,9 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
-  const { initialConnect } = useThread()
+  const { threadID } = props
+
+  const { initialConnect } = useThread({ threadID })
 
   const onInitialConnect = () => {
     initialConnect()
@@ -24,9 +26,16 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   return { ...props, ...presenterProps }
 }
 
-export const getStaticProps = async ({}: GetStaticPropsContext) => {
+export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+  const threadID = Array.isArray(params?.threadID)
+    ? params?.threadID[0]
+    : params?.threadID
+  if (!threadID) throw new Error('no thread ID')
+
   return {
-    props: {},
+    props: {
+      threadID,
+    },
     revalidate: 60,
   }
 }

@@ -2,6 +2,7 @@ import {
   Database,
   get,
   onChildAdded,
+  onDisconnect,
   push,
   ref,
   serverTimestamp,
@@ -61,6 +62,11 @@ export class DatabaseCRUD {
   }) {
     const dbRef = ref(this._database, path)
     if (addTimestamp) data = { ...data, timestamp: serverTimestamp() }
-    return push(dbRef, data)
+    return push(dbRef, data).then((ref) => ref.key)
+  }
+
+  public removeOnDisconnect({ path }: { path: string }) {
+    const dbRef = ref(this._database, path)
+    onDisconnect(dbRef).remove()
   }
 }
