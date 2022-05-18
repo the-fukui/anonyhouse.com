@@ -56,13 +56,49 @@ export class ThreadRepository {
     type: RTCSdpType
     sdp: string
   }) {
-    return Firebase.instance.database.set<
-      | RTDB.Tree['signaling']['{threadID}']['answeredBy']['{userID}']
-      | RTDB.Tree['signaling']['{threadID}']['offeredBy']['{userID}']
-    >({
-      path: `/signaling/${targetID}/${type}edBy/${myID}`,
-      data: { sdp },
-      addTimestamp: true,
+    if (type !== 'answer' && type !== 'offer') return
+
+    return Firebase.instance.database
+      .set<RTDB.Tree['signaling']['{targetID}']['{myID}']>({
+        path: `/signaling/${targetID}/${myID}`,
+        data: { sdp, type },
+        addTimestamp: true,
+      })
+      .then(() => {
+        //接続解除時に自動削除
+        Firebase.instance.database.removeOnDisconnect({
+          path: `/signaling/${targetID}/${myID}`,
+        })
+      })
+  }
+
+  /**
+   * SDP受取時（offer/answer）にcallback発火する
+   */
+  public onSDPReceived = ({
+    myID,
+    callback,
+  }: {
+    myID: string
+    callback: ({
+      sdp,
+      type,
+      senderID,
+    }: {
+      sdp: string
+      type: RTCSdpType
+      senderID: string
+    }) => void
+  }) => {
+    Firebase.instance.database.onChildAdded<RTDB.Tree['signaling']['{myID}']>({
+      path: `/signaling/${myID}/`,
+      callback: ({ value, key }) => {
+        const senderID = Object.keys(value)[0]
+        const { sdp, type } = Object.values(value)[0] ?? {}
+        if (!sdp || !type || !senderID) return
+
+        callback({ sdp, type, senderID })
+      },
     })
   }
 }

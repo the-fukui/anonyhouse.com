@@ -16,17 +16,10 @@ namespace RTDB {
     }
     signaling: {
       [key: userID]: {
-        offeredBy: {
-          [key: userID]: {
-            sdp: string
-            timestamp: number
-          }
-        }
-        answeredBy: {
-          [key: userID]: {
-            sdp: string
-            timestamp: number
-          }
+        [key: userID]: {
+          type: 'answer' | 'offer'
+          sdp: string
+          timestamp: number
         }
       }
     }

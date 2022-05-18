@@ -3,6 +3,7 @@ import {
   get,
   onChildAdded,
   onDisconnect,
+  onValue,
   push,
   ref,
   serverTimestamp,
@@ -24,16 +25,21 @@ export class DatabaseCRUD {
     })
   }
 
-  public onChildAdded({
+  public onChildAdded<T>({
     path,
     callback,
   }: {
     path: string
-    callback: (value: any) => void
+    callback: ({ value, key }: { value: T; key: keyof T }) => void
   }) {
     const dbRef = ref(this._database, path)
-    return onChildAdded(dbRef, (snapShpt) => {
-      if (snapShpt.exists()) return callback(snapShpt.val())
+    return onChildAdded(dbRef, (snapShot) => {
+      if (snapShot.exists()) {
+        callback({
+          value: snapShot.val() as T,
+          key: snapShot.key as keyof T,
+        })
+      }
     })
   }
 

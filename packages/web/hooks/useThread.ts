@@ -25,8 +25,9 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
    * 1.DBにユーザー登録
    * 2.ユーザーID取得
    * 3.スレッドメンバー取得
-   * 4.メンバー分Peerを作成（自分以外）
-   * 5.メンバー分シグナリング
+   * 4.自分宛てのSDPをwatchしておく
+   * 5.メンバー分Peerを作成（自分以外）
+   * 6.メンバー分シグナリング
    */
   const initialConnect = async () => {
     // 1.DBにユーザー登録
@@ -36,12 +37,23 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
     // 3.スレッドメンバー取得
     await _getUsers()
 
-    // 4.メンバー分Peerを作成（自分以外）
-    // 5.メンバー分シグナリング
-    // if (!myID.current) throw new Error("Couldn't get my ID")
-    // _signaling({
-    //   targetIDs: initialUsers.current.filter((userID) => userID !== myID.current),
-    // })
+    if (!myID.current) throw new Error("Couldn't get my ID")
+
+    // 4.自分宛てのSDPをwatchしておく
+    threadRepository.onSDPReceived({
+      myID: myID.current,
+      callback: ({ sdp, type, senderID }) => {
+        console.log(sdp, type, senderID)
+      },
+    })
+
+    // 5.メンバー分Peerを作成（自分以外）
+    // 6.メンバー分シグナリング
+    _signaling({
+      targetIDs: initialUsers.current
+        .filter((user) => user.ID !== myID.current)
+        .map((user) => user.ID),
+    })
   }
 
   const _registerUser = async () => {
@@ -61,8 +73,6 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
   }
 
   const _signaling = ({ targetIDs }: { targetIDs: string[] }) => {
-    // if(!myStream.current) throw new Error("Couldn't get my stream")
-
     const onStream = (stream: MediaStream, peerID: string) => {}
 
     const onSignal = (data: SignalData, peerID: string) => {
