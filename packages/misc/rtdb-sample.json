@@ -12,17 +12,10 @@
     },
     "signaling": {
         "{userID}": {
-            "offeredBy": {
-                "{userID}": {
-                    "sdp": {},
-                    "timestamp": 12345678
-                }
-            },
-            "answeredBy": {
-                "{userID}": {
-                    "sdp": {},
-                    "timestamp": 12345678
-                }
+            "{userID}": {
+                "sdp": {},
+                "type": "answer",
+                "timestamp": 12345678
             }
         }
     }
