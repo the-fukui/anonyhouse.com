@@ -32,21 +32,30 @@ export class ThreadRepository {
   }
 
   /**
+   * ユーザー一覧を取得
+   */
+  public getUsers({ threadID }: { threadID: string }) {
+    return Firebase.instance.database.get({
+      path: `/threads/${threadID}/users/`,
+    })
+  }
+
+  /**
    * SDPをDBにセット（offer/answer両対応）
    */
   public setSDP({
-    userID,
+    myID,
     targetID,
     type,
     sdp,
   }: {
-    userID: string
+    myID: string
     targetID: string
     type: RTCSdpType
     sdp: string
   }) {
     return Firebase.instance.database.set({
-      path: `/signaling/${targetID}/${type}edBy/${userID}`,
+      path: `/signaling/${targetID}/${type}edBy/${myID}`,
       data: { sdp },
       addTimestamp: true,
     })
