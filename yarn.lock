@@ -5933,6 +5933,22 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
+prettier-plugin-scaffdog@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-scaffdog/-/prettier-plugin-scaffdog-1.2.0.tgz#6d7badd55fed7dabe6ff0438c06cbe658755aa26"
+  integrity sha512-z8jMM6gbmq3d/u3slAAHhwocy9I0RQP3UL/a9Lf543oe8xR+FI6yH5RDFF1VCOESENmfPN9TZf4isBL18q3oLQ==
+  dependencies:
+    "@scaffdog/config" "1.2.0"
+    "@scaffdog/engine" "1.2.0"
+    "@scaffdog/types" "1.2.0"
+    minimatch "^3.0.4"
+    prettier "2.5.1"
+
+prettier@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.1.tgz#fff75fa9d519c54cf0fce328c1017d94546bc56a"
+  integrity sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==
+
 prettier@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.6.2.tgz#e26d71a18a74c3d0f0597f55f01fb6c06c206032"
