@@ -57,7 +57,10 @@ export const usePeer = () => {
       removePeer({ peerID })
     })
 
-    onError && peer.on('error', (error) => onError(error, peerID))
+    peer.on('error', (error) => {
+      console.log('on error')
+      onError && onError(error, peerID)
+    })
   }
 
   const setRemote: SetRemote = ({ data, peerID }) => {
@@ -68,8 +71,12 @@ export const usePeer = () => {
   }
 
   const removePeer: RemovePeer = ({ peerID }) => {
+    console.log('on close')
     peers[peerID]?.destroy()
-    delete peers[peerID]
+    setPeers((peers) => {
+      delete peers[peerID]
+      return peers
+    })
   }
 
   return {
