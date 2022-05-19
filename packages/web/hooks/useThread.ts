@@ -16,7 +16,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
   const myStream = useRef<MediaStream>()
   const myID = useRef<string>()
   const initialUsers = useRef<ThreadUser[]>([])
-  const { createPeer, peers } = usePeer()
+  const { createPeer, peers, setRemote } = usePeer()
   const threadRepository = new ThreadRepository(threadID)
 
   /**
@@ -43,13 +43,13 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
     threadRepository.onSDPReceived({
       myID: myID.current,
       callback: ({ sdp, type, senderID }) => {
-        console.log(sdp, type, senderID)
+        _signaling({ sdp, type, senderID })
       },
     })
 
     // 5.メンバー分Peerを作成（自分以外）
     // 6.メンバー分シグナリング
-    _signaling({
+    _initialSignaling({
       targetIDs: initialUsers.current
         .filter((user) => user.ID !== myID.current)
         .map((user) => user.ID),
@@ -72,33 +72,55 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
     return users
   }
 
-  const _signaling = ({ targetIDs }: { targetIDs: string[] }) => {
-    const onStream = (stream: MediaStream, peerID: string) => {}
+  const _onStream = (stream: MediaStream, peerID: string) => {}
 
-    const onSignal = (data: SignalData, peerID: string) => {
-      if (!myID.current) throw new Error("Couldn't get my ID")
-      if (data.type !== 'answer' && data.type !== 'offer') return
-      if (!data.sdp) return
+  const _onSignal = (data: SignalData, peerID: string) => {
+    if (!myID.current) throw new Error("Couldn't get my ID")
+    if (data.type !== 'answer' && data.type !== 'offer') return
+    if (!data.sdp) return
 
-      //DBにSDPをセット
-      threadRepository.setSDP({
-        myID: myID.current,
-        targetID: peerID,
-        type: data.type,
-        sdp: data.sdp,
-      })
-    }
+    //DBにSDPをセット
+    threadRepository.setSDP({
+      myID: myID.current,
+      targetID: peerID,
+      type: data.type,
+      sdp: data.sdp,
+    })
+  }
 
+  const _initialSignaling = ({ targetIDs }: { targetIDs: string[] }) => {
     // メンバー分Peerを作成
     targetIDs.forEach((targetID) => {
       createPeer({
         initiator: true,
         peerID: targetID,
         stream: myStream.current,
-        onSignal,
-        onStream,
+        onSignal: _onSignal,
+        onStream: _onStream,
       })
     })
+  }
+
+  const _signaling = ({
+    sdp,
+    type,
+    senderID,
+  }: {
+    sdp: string
+    type: RTCSdpType
+    senderID: string
+  }) => {
+    if (type === 'offer') {
+      createPeer({
+        initiator: false,
+        peerID: senderID,
+        stream: myStream.current,
+        onSignal: _onSignal,
+        onStream: _onStream,
+      })
+    }
+
+    setRemote({ data: { sdp, type }, peerID: senderID })
   }
 
   return {

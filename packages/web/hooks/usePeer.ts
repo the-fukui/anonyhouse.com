@@ -49,6 +49,10 @@ export const usePeer = () => {
 
     peer.on('stream', (stream) => onStream(stream, peerID))
 
+    peer.on('connect', () => {
+      console.log('connected!')
+    })
+
     peer.on('close', () => {
       removePeer({ peerID })
     })

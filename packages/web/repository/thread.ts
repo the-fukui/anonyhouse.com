@@ -90,11 +90,13 @@ export class ThreadRepository {
       senderID: string
     }) => void
   }) => {
-    Firebase.instance.database.onChildAdded<RTDB.Tree['signaling']['{myID}']>({
+    Firebase.instance.database.onChildAdded<
+      RTDB.Tree['signaling']['{myID}']['senderID']
+    >({
       path: `/signaling/${myID}/`,
       callback: ({ value, key }) => {
-        const senderID = Object.keys(value)[0]
-        const { sdp, type } = Object.values(value)[0] ?? {}
+        const senderID = key.toString()
+        const { sdp, type } = value
         if (!sdp || !type || !senderID) return
 
         callback({ sdp, type, senderID })
