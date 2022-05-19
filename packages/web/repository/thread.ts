@@ -13,10 +13,10 @@ export class ThreadRepository {
   /**
    * ユーザー登録してIDを取得
    */
-  public registerUser({ threadID }: { threadID: string }) {
+  public registerUser() {
     return Firebase.instance.database
       .push<EmptyObject>({
-        path: `/threads/${threadID}/users/`,
+        path: `/threads/${this._threadID}/users/`,
         data: {},
         addTimestamp: true,
       })
@@ -25,7 +25,7 @@ export class ThreadRepository {
 
         //接続解除時に自動削除
         Firebase.instance.database.removeOnDisconnect({
-          path: `/threads/${threadID}/users/${userID}`,
+          path: `/threads/${this._threadID}/users/${userID}`,
         })
         return userID
       })
@@ -34,11 +34,11 @@ export class ThreadRepository {
   /**
    * ユーザー一覧を取得
    */
-  public getUsers({ threadID }: { threadID: string }) {
+  public getUsers() {
     return Firebase.instance.database.get<
       RTDB.Tree['threads']['{threadID}']['users']
     >({
-      path: `/threads/${threadID}/users/`,
+      path: `/threads/${this._threadID}/users/`,
     })
   }
 

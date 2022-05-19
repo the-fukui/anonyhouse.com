@@ -57,15 +57,13 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
   }
 
   const _registerUser = async () => {
-    const userID = await threadRepository.registerUser({ threadID })
+    const userID = await threadRepository.registerUser()
     myID.current = userID
     return userID
   }
 
   const _getUsers = async () => {
-    const users = await threadRepository.getUsers({
-      threadID,
-    })
+    const users = await threadRepository.getUsers()
     initialUsers.current = Object.entries(users).map(([userID, values]) => {
       return { ID: userID, ...values }
     })
