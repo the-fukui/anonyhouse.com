@@ -16,7 +16,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
   const myStream = useRef<MediaStream>()
   const myID = useRef<string>()
   const initialUsers = useRef<ThreadUser[]>([])
-  const { createPeer, peers, setRemote } = usePeer()
+  const { createPeer, setRemote } = usePeer()
   const threadRepository = new ThreadRepository(threadID)
 
   /**

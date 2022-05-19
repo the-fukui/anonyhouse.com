@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useRef } from 'react'
 import Peer, { Instance, SignalData } from 'simple-peer'
 
 type CreatePeer = ({
@@ -24,7 +24,7 @@ type SetRemote = ({
 type RemovePeer = ({ peerID }: { peerID: string }) => void
 
 export const usePeer = () => {
-  const [peers, setPeers] = useState<{ [key: string]: Instance }>({})
+  const peers = useRef<{ [key: string]: Instance }>({})
 
   const createPeer: CreatePeer = ({
     initiator,
@@ -38,11 +38,6 @@ export const usePeer = () => {
       initiator,
       stream,
       trickle: false,
-    })
-
-    setPeers((peers) => {
-      peers[peerID] = peer
-      return peers
     })
 
     peer.on('signal', (data) => onSignal(data, peerID))
@@ -61,10 +56,12 @@ export const usePeer = () => {
       console.log('on error')
       onError && onError(error, peerID)
     })
+
+    peers.current[peerID] = peer
   }
 
   const setRemote: SetRemote = ({ data, peerID }) => {
-    const peer = peers[peerID]
+    const peer = peers.current[peerID]
     if (!peer) return
 
     peer.signal(data)
@@ -72,17 +69,13 @@ export const usePeer = () => {
 
   const removePeer: RemovePeer = ({ peerID }) => {
     console.log('on close')
-    peers[peerID]?.destroy()
-    setPeers((peers) => {
-      delete peers[peerID]
-      return peers
-    })
+    peers.current[peerID]?.destroy()
+    delete peers.current[peerID]
   }
 
   return {
     createPeer,
     setRemote,
     removePeer,
-    peers,
   }
 }
