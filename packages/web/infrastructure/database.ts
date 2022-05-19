@@ -43,6 +43,23 @@ export class DatabaseCRUD {
     })
   }
 
+  public onValue<T>({
+    path,
+    callback,
+  }: {
+    path: string
+    callback: ({ value }: { value: T }) => void
+  }) {
+    const dbRef = ref(this._database, path)
+    return onValue(dbRef, (snapShot) => {
+      if (snapShot.exists()) {
+        callback({
+          value: snapShot.val() as T,
+        })
+      }
+    })
+  }
+
   public set<T>({
     path,
     data,

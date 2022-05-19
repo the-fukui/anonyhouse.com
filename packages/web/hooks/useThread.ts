@@ -16,6 +16,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
   const myStream = useRef<MediaStream>()
   const myID = useRef<string>()
   const initialUsers = useRef<ThreadUser[]>([])
+  const [users, setUsers] = useState<ThreadUser[]>([])
   const { createPeer, setRemote } = usePeer()
   const threadRepository = new ThreadRepository(threadID)
 
@@ -25,30 +26,31 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
    * 1.DBにユーザー登録
    * 2.ユーザーID取得
    * 3.スレッドメンバー取得
-   * 4.自分宛てのSDPをwatchしておく
-   * 5.メンバー分Peerを作成（自分以外）
-   * 6.メンバー分シグナリング
+   * 4.スレッドメンバーwatch
+   * 5.自分宛てのSDPをwatchしておく
+   * 6.メンバー分Peerを作成（自分以外）
+   * 7.メンバー分シグナリング
    */
   const initialConnect = async () => {
     // 1.DBにユーザー登録
     // 2.ユーザーID取得
     await _registerUser()
 
-    // 3.スレッドメンバー取得
+    // 3.スレッドメンバー取得（監視）
     await _getUsers()
+    // 4.スレッドメンバーwatch
+    await _watchUsers()
 
     if (!myID.current) throw new Error("Couldn't get my ID")
 
-    // 4.自分宛てのSDPをwatchしておく
+    // 5.自分宛てのSDPをwatchしておく
     threadRepository.onSDPReceived({
       myID: myID.current,
-      callback: ({ sdp, type, senderID }) => {
-        _signaling({ sdp, type, senderID })
-      },
+      callback: _signaling,
     })
 
-    // 5.メンバー分Peerを作成（自分以外）
-    // 6.メンバー分シグナリング
+    // 6.メンバー分Peerを作成（自分以外）
+    // 7.メンバー分シグナリング
     _initialSignaling({
       targetIDs: initialUsers.current
         .filter((user) => user.ID !== myID.current)
@@ -64,10 +66,26 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
 
   const _getUsers = async () => {
     const users = await threadRepository.getUsers()
-    initialUsers.current = Object.entries(users).map(([userID, values]) => {
+
+    const threadUsers = Object.entries(users).map(([userID, values]) => {
       return { ID: userID, ...values }
     })
-    return users
+
+    //初回取得時のみinitialUserとして別途保持
+    initialUsers.current = threadUsers
+  }
+
+  const _watchUsers = async () => {
+    await threadRepository.watchUsers({
+      callback: ({ value: users }) => {
+        const threadUsers = Object.entries(users).map(([userID, values]) => {
+          return { ID: userID, ...values }
+        })
+
+        //メンバーをリアルタイム反映
+        setUsers(threadUsers)
+      },
+    })
   }
 
   const _onStream = (stream: MediaStream, peerID: string) => {}
@@ -123,5 +141,6 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
 
   return {
     initialConnect,
+    users,
   }
 }

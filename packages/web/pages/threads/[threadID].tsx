@@ -5,16 +5,24 @@ import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   onInitialConnect,
+  users,
 }) => (
   <div>
     <button onClick={onInitialConnect}>initialConnect</button>
+    <ul>
+      {users.map((user) => (
+        <li key={user.ID}>
+          {user.ID} / {user.timestamp}
+        </li>
+      ))}
+    </ul>
   </div>
 )
 
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
-  const { initialConnect } = useThread({ threadID })
+  const { initialConnect, users } = useThread({ threadID })
 
   const onInitialConnect = () => {
     initialConnect()
@@ -22,6 +30,7 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
 
   const presenterProps = {
     onInitialConnect,
+    users,
   }
   return { ...props, ...presenterProps }
 }

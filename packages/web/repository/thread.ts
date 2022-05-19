@@ -43,6 +43,23 @@ export class ThreadRepository {
   }
 
   /**
+   * ユーザー一覧を監視
+   */
+  public watchUsers({
+    callback,
+  }: {
+    callback: ({
+      value,
+    }: {
+      value: RTDB.Tree['threads']['{threadID}']['users']
+    }) => void
+  }) {
+    Firebase.instance.database.onValue<
+      RTDB.Tree['threads']['{threadID}']['users']
+    >({ callback, path: `/threads/${this._threadID}/users/` })
+  }
+
+  /**
    * SDPをDBにセット（offer/answer両対応）
    */
   public setSDP({
