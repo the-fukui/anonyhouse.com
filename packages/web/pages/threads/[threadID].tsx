@@ -1,6 +1,6 @@
 import UserControl from '@web/components/UserControl'
+import { useGlobalThread } from '@web/hooks/useGlobalThread'
 import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
-import { useThread } from '@web/hooks/useThread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'
@@ -9,6 +9,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   onInitialConnect,
   users,
   state,
+  myID,
 }) => (
   <div>
     <UserControl />
@@ -18,7 +19,8 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
     <ul>
       {users.map((user) => (
         <li key={user.ID}>
-          {user.ID} / {user.timestamp}
+          {user.ID} | {new Date(user.timestamp).toLocaleString()}{' '}
+          {user.ID === myID && '(you)'}
         </li>
       ))}
     </ul>
@@ -29,7 +31,10 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
   const { stream, state } = useGlobalUserMedia()
-  const { initialConnect, users } = useThread({ threadID, myStream: stream })
+  const { initialConnect, users, myID } = useGlobalThread({
+    threadID,
+    myStream: stream,
+  })
 
   const onInitialConnect = () => {
     initialConnect()
@@ -39,6 +44,7 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
     onInitialConnect,
     users,
     state,
+    myID,
   }
   return { ...props, ...presenterProps }
 }

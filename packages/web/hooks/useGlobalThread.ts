@@ -1,7 +1,8 @@
 import { usePeer } from '@web/hooks/usePeer'
 import { ThreadRepository } from '@web/repository/thread'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { atom, useRecoilCallback, useRecoilState } from 'recoil'
 import { SignalData } from 'simple-peer'
 
 type UseThreadArguments = {
@@ -11,12 +12,36 @@ type UseThreadArguments = {
 
 type ThreadUser = {
   ID: string
+  AudioRef?: HTMLAudioElement
 } & Awaited<ReturnType<ThreadRepository['getUsers']>>['{userID}']
 
-export const useThread = ({ threadID, myStream }: UseThreadArguments) => {
-  const myID = useRef<string>()
+interface ThreadState {
+  myID?: string
+  users: ThreadUser[]
+}
+
+const threadState = atom<ThreadState>({
+  key: 'Thread',
+  default: {
+    myID: undefined,
+    users: [],
+  },
+})
+
+export const useGlobalThread = ({ threadID, myStream }: UseThreadArguments) => {
+  const [state, setState] = useRecoilState(threadState)
+  /**
+   * hook内でのRecoil stateはuseEffect+useRefで状態変化を監視しないといけない
+   * @see https://dev.to/natelindev/use-recoil-in-react-custom-hooks-52j5
+   */
+  const myID = useRef(state.myID)
+
+  useEffect(() => {
+    myID.current = state.myID
+  }, [state])
+
   const initialUsers = useRef<ThreadUser[]>([])
-  const [users, setUsers] = useState<ThreadUser[]>([])
+
   const { createPeer, setRemote } = usePeer()
   const threadRepository = new ThreadRepository(threadID)
 
@@ -60,7 +85,7 @@ export const useThread = ({ threadID, myStream }: UseThreadArguments) => {
 
   const _registerUser = async () => {
     const userID = await threadRepository.registerUser()
-    myID.current = userID
+    setState((_state) => ({ ..._state, myID: userID }))
     return userID
   }
 
@@ -83,7 +108,7 @@ export const useThread = ({ threadID, myStream }: UseThreadArguments) => {
         })
 
         //メンバーをリアルタイム反映
-        setUsers(threadUsers)
+        setState((_state) => ({ ..._state, users: threadUsers }))
       },
     })
   }
@@ -141,6 +166,6 @@ export const useThread = ({ threadID, myStream }: UseThreadArguments) => {
 
   return {
     initialConnect,
-    users,
+    ...state,
   }
 }
