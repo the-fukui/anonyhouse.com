@@ -1,5 +1,6 @@
+import UserControl from '@web/components/UserControl'
+import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
 import { useThread } from '@web/hooks/useThread'
-import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'
@@ -7,12 +8,13 @@ import React from 'react'
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   onInitialConnect,
   users,
-  isMuted,
-  toggleMute,
+  state,
 }) => (
   <div>
-    mute:<button onClick={toggleMute}>{isMuted ? 'off' : 'on'}</button>
-    <button onClick={onInitialConnect}>initialConnect</button>
+    <UserControl />
+    <button disabled={state !== 'ok'} onClick={onInitialConnect}>
+      initialConnect
+    </button>
     <ul>
       {users.map((user) => (
         <li key={user.ID}>
@@ -26,7 +28,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
-  const { stream, isMuted, toggleMute } = useUserMedia()
+  const { stream, state } = useGlobalUserMedia()
   const { initialConnect, users } = useThread({ threadID, myStream: stream })
 
   const onInitialConnect = () => {
@@ -36,8 +38,7 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const presenterProps = {
     onInitialConnect,
     users,
-    isMuted,
-    toggleMute,
+    state,
   }
   return { ...props, ...presenterProps }
 }
