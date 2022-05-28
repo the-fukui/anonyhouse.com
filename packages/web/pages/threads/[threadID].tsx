@@ -1,4 +1,5 @@
 import { useThread } from '@web/hooks/useThread'
+import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'
@@ -6,8 +7,11 @@ import React from 'react'
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   onInitialConnect,
   users,
+  isMuted,
+  toggleMute,
 }) => (
   <div>
+    mute:<button onClick={toggleMute}>{isMuted ? 'off' : 'on'}</button>
     <button onClick={onInitialConnect}>initialConnect</button>
     <ul>
       {users.map((user) => (
@@ -22,7 +26,8 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
-  const { initialConnect, users } = useThread({ threadID })
+  const { stream, isMuted, toggleMute } = useUserMedia()
+  const { initialConnect, users } = useThread({ threadID, myStream: stream })
 
   const onInitialConnect = () => {
     initialConnect()
@@ -31,6 +36,8 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const presenterProps = {
     onInitialConnect,
     users,
+    isMuted,
+    toggleMute,
   }
   return { ...props, ...presenterProps }
 }

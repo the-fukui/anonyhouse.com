@@ -1,19 +1,19 @@
 import { usePeer } from '@web/hooks/usePeer'
 import { ThreadRepository } from '@web/repository/thread'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SignalData } from 'simple-peer'
 
 type UseThreadArguments = {
   threadID: string
+  myStream?: MediaStream
 }
 
 type ThreadUser = {
   ID: string
 } & Awaited<ReturnType<ThreadRepository['getUsers']>>['{userID}']
 
-export const useThread = ({ threadID }: UseThreadArguments) => {
-  const myStream = useRef<MediaStream>()
+export const useThread = ({ threadID, myStream }: UseThreadArguments) => {
   const myID = useRef<string>()
   const initialUsers = useRef<ThreadUser[]>([])
   const [users, setUsers] = useState<ThreadUser[]>([])
@@ -110,7 +110,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
       createPeer({
         initiator: true,
         peerID: targetID,
-        stream: myStream.current,
+        stream: myStream,
         onSignal: _onSignal,
         onStream: _onStream,
       })
@@ -130,7 +130,7 @@ export const useThread = ({ threadID }: UseThreadArguments) => {
       createPeer({
         initiator: false,
         peerID: senderID,
-        stream: myStream.current,
+        stream: myStream,
         onSignal: _onSignal,
         onStream: _onStream,
       })
