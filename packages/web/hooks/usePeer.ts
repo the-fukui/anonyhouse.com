@@ -23,6 +23,8 @@ type SetRemote = ({
 
 type RemovePeer = ({ peerID }: { peerID: string }) => void
 
+type SetStream = (stream: MediaStream) => void
+
 export const usePeer = () => {
   const peers = useRef<{ [key: string]: Instance }>({})
 
@@ -73,9 +75,19 @@ export const usePeer = () => {
     delete peers.current[peerID]
   }
 
+  /**
+   * 現在ある全てのpeerにstreamをセットする
+   */
+  const setStream: SetStream = (stream) => {
+    Object.values(peers.current).forEach((peer) => {
+      peer.addStream(stream)
+    })
+  }
+
   return {
     createPeer,
     setRemote,
     removePeer,
+    setStream,
   }
 }
