@@ -20,7 +20,7 @@ export const useGlobalUserMedia = () => {
   const [state, setState] = useRecoilState(userMediaState)
 
   const getUserMedia = async () => {
-    setState((value) => ({ ...value, state: 'pending' }))
+    setState((_state) => ({ ..._state, state: 'pending' }))
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -30,7 +30,7 @@ export const useGlobalUserMedia = () => {
         setState(() => ({ stream, isMuted: false, state: 'ok' }))
       })
       .catch((e) => {
-        setState((value) => ({ ...value, state: 'error' }))
+        setState((_state) => ({ ..._state, state: 'error' }))
         throw new Error(`couldn't get user media`)
       })
   }
@@ -40,7 +40,7 @@ export const useGlobalUserMedia = () => {
     state.stream
       ?.getTracks()
       .forEach((track) => (track.enabled = state.isMuted))
-    setState((value) => ({ ...value, isMuted: !value.isMuted }))
+    setState((_state) => ({ ..._state, isMuted: !_state.isMuted }))
   }
 
   return {
