@@ -1,34 +1,26 @@
+import ThreadUserList from '@web/components/ThreadUserList'
 import UserControl from '@web/components/UserControl'
 import { useGlobalThread } from '@web/hooks/useGlobalThread'
 import { useGlobalUser } from '@web/hooks/useGlobalUser'
 import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
-  initialConnect,
-  users,
+  onInitialConnect,
   myStreamStatus,
-  myID,
   myAvatar,
 }) => (
   <div>
     <UserControl />
     <button
       disabled={myStreamStatus !== 'ok' || !Boolean(myAvatar)}
-      onClick={initialConnect}
+      onClick={onInitialConnect}
     >
       initialConnect
     </button>
-    <ul>
-      {users.map((user) => (
-        <li key={user.ID}>
-          {user.avatar} {user.ID} | {new Date(user.timestamp).toLocaleString()}{' '}
-          {user.ID === myID && '(you)'}
-        </li>
-      ))}
-    </ul>
+    <ThreadUserList />
   </div>
 )
 
@@ -37,17 +29,19 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
 
   const { stream: myStream, status: myStreamStatus } = useGlobalUserMedia()
   const { avatar: myAvatar } = useGlobalUser()
-  const { initialConnect, users, myID } = useGlobalThread({
-    threadID,
-    myStream,
-    myAvatar,
-  })
+  const { initialConnect } = useGlobalThread()
+
+  const onInitialConnect = () => {
+    initialConnect({
+      threadID,
+      myStream,
+      myAvatar,
+    })
+  }
 
   const presenterProps = {
-    initialConnect,
-    users,
+    onInitialConnect,
     myStreamStatus,
-    myID,
     myAvatar,
   }
   return { ...props, ...presenterProps }
