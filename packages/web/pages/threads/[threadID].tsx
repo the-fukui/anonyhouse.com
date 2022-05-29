@@ -7,7 +7,7 @@ import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React, { useEffect } from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
-  onInitialConnect,
+  initialConnect,
   users,
   myStreamStatus,
   myID,
@@ -17,7 +17,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
     <UserControl />
     <button
       disabled={myStreamStatus !== 'ok' || !Boolean(myAvatar)}
-      onClick={onInitialConnect}
+      onClick={initialConnect}
     >
       initialConnect
     </button>
@@ -35,11 +35,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
-  const {
-    stream: myStream,
-    status: myStreamStatus,
-    getUserMedia: getMyUserMedia,
-  } = useGlobalUserMedia()
+  const { stream: myStream, status: myStreamStatus } = useGlobalUserMedia()
   const { avatar: myAvatar } = useGlobalUser()
   const { initialConnect, users, myID } = useGlobalThread({
     threadID,
@@ -47,16 +43,8 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
     myAvatar,
   })
 
-  useEffect(() => {
-    getMyUserMedia()
-  }, [])
-
-  const onInitialConnect = () => {
-    initialConnect()
-  }
-
   const presenterProps = {
-    onInitialConnect,
+    initialConnect,
     users,
     myStreamStatus,
     myID,
