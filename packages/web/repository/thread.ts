@@ -13,11 +13,13 @@ export class ThreadRepository {
   /**
    * ユーザー登録してIDを取得
    */
-  public registerUser() {
+  public registerUser(myAvatar: string) {
     return Firebase.instance.database
-      .push<EmptyObject>({
+      .push<RTDB.Tree['threads']['{threadID}']['users']['{userID}']>({
         path: `/threads/${this._threadID}/users/`,
-        data: {},
+        data: {
+          avatar: myAvatar,
+        },
         addTimestamp: true,
       })
       .then((userID) => {

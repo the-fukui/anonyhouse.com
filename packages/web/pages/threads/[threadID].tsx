@@ -1,25 +1,30 @@
 import UserControl from '@web/components/UserControl'
 import { useGlobalThread } from '@web/hooks/useGlobalThread'
+import { useGlobalUser } from '@web/hooks/useGlobalUser'
 import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   onInitialConnect,
   users,
-  state,
+  myStreamStatus,
   myID,
+  myAvatar,
 }) => (
   <div>
     <UserControl />
-    <button disabled={state !== 'ok'} onClick={onInitialConnect}>
+    <button
+      disabled={myStreamStatus !== 'ok' || !Boolean(myAvatar)}
+      onClick={onInitialConnect}
+    >
       initialConnect
     </button>
     <ul>
       {users.map((user) => (
         <li key={user.ID}>
-          {user.ID} | {new Date(user.timestamp).toLocaleString()}{' '}
+          {user.avatar} {user.ID} | {new Date(user.timestamp).toLocaleString()}{' '}
           {user.ID === myID && '(you)'}
         </li>
       ))}
@@ -30,11 +35,21 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { threadID } = props
 
-  const { stream, state } = useGlobalUserMedia()
+  const {
+    stream: myStream,
+    status: myStreamStatus,
+    getUserMedia: getMyUserMedia,
+  } = useGlobalUserMedia()
+  const { avatar: myAvatar } = useGlobalUser()
   const { initialConnect, users, myID } = useGlobalThread({
     threadID,
-    myStream: stream,
+    myStream,
+    myAvatar,
   })
+
+  useEffect(() => {
+    getMyUserMedia()
+  }, [])
 
   const onInitialConnect = () => {
     initialConnect()
@@ -43,8 +58,9 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const presenterProps = {
     onInitialConnect,
     users,
-    state,
+    myStreamStatus,
     myID,
+    myAvatar,
   }
   return { ...props, ...presenterProps }
 }

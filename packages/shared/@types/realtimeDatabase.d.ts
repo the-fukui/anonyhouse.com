@@ -9,6 +9,7 @@ namespace RTDB {
         timestamp: number
         users: {
           [key: userID]: {
+            avatar: string
             timestamp: number
           }
         }

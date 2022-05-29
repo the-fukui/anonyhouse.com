@@ -8,6 +8,7 @@ import { SignalData } from 'simple-peer'
 type UseThreadArguments = {
   threadID: string
   myStream?: MediaStream
+  myAvatar?: string
 }
 
 type ThreadUser = {
@@ -28,7 +29,11 @@ const threadState = atom<ThreadState>({
   },
 })
 
-export const useGlobalThread = ({ threadID, myStream }: UseThreadArguments) => {
+export const useGlobalThread = ({
+  threadID,
+  myStream,
+  myAvatar,
+}: UseThreadArguments) => {
   const [state, setState] = useRecoilState(threadState)
   /**
    * hook内でのRecoil stateはuseEffect+useRefで状態変化を監視しないといけない
@@ -56,10 +61,12 @@ export const useGlobalThread = ({ threadID, myStream }: UseThreadArguments) => {
    * 6.メンバー分Peerを作成（自分以外）
    * 7.メンバー分シグナリング
    */
-  const initialConnect = async () => {
+  const initialConnect = useCallback(async () => {
+    if (!myAvatar) throw new Error('Avatar is not set')
+
     // 1.DBにユーザー登録
     // 2.ユーザーID取得
-    await _registerUser()
+    await _registerUser(myAvatar)
 
     // 3.スレッドメンバー取得（監視）
     await _getUsers()
@@ -81,10 +88,10 @@ export const useGlobalThread = ({ threadID, myStream }: UseThreadArguments) => {
         .filter((user) => user.ID !== myID.current)
         .map((user) => user.ID),
     })
-  }
+  }, [myStream, myAvatar])
 
-  const _registerUser = async () => {
-    const userID = await threadRepository.registerUser()
+  const _registerUser = async (myAvatar: string) => {
+    const userID = await threadRepository.registerUser(myAvatar)
     setState((_state) => ({ ..._state, myID: userID }))
     return userID
   }

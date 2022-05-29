@@ -4,7 +4,7 @@ import { atom, useRecoilState } from 'recoil'
 interface UserMediaState {
   stream?: MediaStream
   isMuted: boolean
-  state: 'initial' | 'pending' | 'ok' | 'error'
+  status: 'initial' | 'pending' | 'ok' | 'error'
 }
 
 const userMediaState = atom<UserMediaState>({
@@ -12,7 +12,7 @@ const userMediaState = atom<UserMediaState>({
   default: {
     stream: undefined,
     isMuted: true,
-    state: 'initial',
+    status: 'initial',
   },
 })
 
@@ -27,10 +27,10 @@ export const useGlobalUserMedia = () => {
         video: false,
       })
       .then((stream) => {
-        setState(() => ({ stream, isMuted: false, state: 'ok' }))
+        setState(() => ({ stream, isMuted: false, status: 'ok' }))
       })
       .catch((e) => {
-        setState((_state) => ({ ..._state, state: 'error' }))
+        setState((_state) => ({ ..._state, status: 'error' }))
         throw new Error(`couldn't get user media`)
       })
   }
@@ -44,8 +44,8 @@ export const useGlobalUserMedia = () => {
   }
 
   return {
-    ...state,
     toggleMute,
     getUserMedia,
+    ...state,
   }
 }
