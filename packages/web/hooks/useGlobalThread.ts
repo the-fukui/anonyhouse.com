@@ -2,7 +2,7 @@ import { usePeer } from '@web/hooks/usePeer'
 import { ThreadRepository } from '@web/repository/thread'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { atom, useRecoilCallback, useRecoilState } from 'recoil'
+import { atom, useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil'
 import { SignalData } from 'simple-peer'
 
 type UseThreadArguments = {
@@ -46,9 +46,7 @@ export const useGlobalThread = ({
   }, [state])
 
   const initialUsers = useRef<ThreadUser[]>([])
-
   const { createPeer, setRemote } = usePeer()
-  const threadRepository = new ThreadRepository(threadID)
 
   /**
    * スレッドの既存メンバーにオファーを出して接続（参加時）
@@ -62,6 +60,91 @@ export const useGlobalThread = ({
    * 7.メンバー分シグナリング
    */
   const initialConnect = useCallback(async () => {
+    const threadRepository = new ThreadRepository(threadID)
+
+    const _registerUser = async (myAvatar: string) => {
+      const userID = await threadRepository.registerUser(myAvatar)
+      setState((_state) => ({ ..._state, myID: userID }))
+      return userID
+    }
+
+    const _getUsers = async () => {
+      const users = await threadRepository.getUsers()
+
+      const threadUsers = Object.entries(users).map(([userID, values]) => {
+        return { ID: userID, ...values }
+      })
+
+      //初回取得時のみinitialUserとして別途保持
+      initialUsers.current = threadUsers
+    }
+
+    const _watchUsers = async () => {
+      await threadRepository.watchUsers({
+        callback: ({ value: users }) => {
+          const threadUsers = Object.entries(users).map(([userID, values]) => {
+            return { ID: userID, ...values }
+          })
+
+          //メンバーをリアルタイム反映
+          setState((_state) => ({ ..._state, users: threadUsers }))
+        },
+      })
+    }
+
+    const _onStream = (stream: MediaStream, peerID: string) => {}
+
+    const _onSignal = (data: SignalData, peerID: string) => {
+      if (!myID.current) throw new Error("Couldn't get my ID")
+      if (data.type !== 'answer' && data.type !== 'offer') return
+      if (!data.sdp) return
+
+      //DBにSDPをセット
+      threadRepository.setSDP({
+        myID: myID.current,
+        targetID: peerID,
+        type: data.type,
+        sdp: data.sdp,
+      })
+    }
+
+    const _initialSignaling = ({ targetIDs }: { targetIDs: string[] }) => {
+      // メンバー分Peerを作成
+      targetIDs.forEach((targetID) => {
+        createPeer({
+          initiator: true,
+          peerID: targetID,
+          stream: myStream,
+          onSignal: _onSignal,
+          onStream: _onStream,
+        })
+      })
+    }
+
+    const _signaling = ({
+      sdp,
+      type,
+      senderID,
+    }: {
+      sdp: string
+      type: RTCSdpType
+      senderID: string
+    }) => {
+      if (type === 'offer') {
+        createPeer({
+          initiator: false,
+          peerID: senderID,
+          stream: myStream,
+          onSignal: _onSignal,
+          onStream: _onStream,
+        })
+      }
+
+      setRemote({ data: { sdp, type }, peerID: senderID })
+    }
+
+    // main
+
     if (!myAvatar) throw new Error('Avatar is not set')
 
     // 1.DBにユーザー登録
@@ -89,87 +172,6 @@ export const useGlobalThread = ({
         .map((user) => user.ID),
     })
   }, [myStream, myAvatar])
-
-  const _registerUser = async (myAvatar: string) => {
-    const userID = await threadRepository.registerUser(myAvatar)
-    setState((_state) => ({ ..._state, myID: userID }))
-    return userID
-  }
-
-  const _getUsers = async () => {
-    const users = await threadRepository.getUsers()
-
-    const threadUsers = Object.entries(users).map(([userID, values]) => {
-      return { ID: userID, ...values }
-    })
-
-    //初回取得時のみinitialUserとして別途保持
-    initialUsers.current = threadUsers
-  }
-
-  const _watchUsers = async () => {
-    await threadRepository.watchUsers({
-      callback: ({ value: users }) => {
-        const threadUsers = Object.entries(users).map(([userID, values]) => {
-          return { ID: userID, ...values }
-        })
-
-        //メンバーをリアルタイム反映
-        setState((_state) => ({ ..._state, users: threadUsers }))
-      },
-    })
-  }
-
-  const _onStream = (stream: MediaStream, peerID: string) => {}
-
-  const _onSignal = (data: SignalData, peerID: string) => {
-    if (!myID.current) throw new Error("Couldn't get my ID")
-    if (data.type !== 'answer' && data.type !== 'offer') return
-    if (!data.sdp) return
-
-    //DBにSDPをセット
-    threadRepository.setSDP({
-      myID: myID.current,
-      targetID: peerID,
-      type: data.type,
-      sdp: data.sdp,
-    })
-  }
-
-  const _initialSignaling = ({ targetIDs }: { targetIDs: string[] }) => {
-    // メンバー分Peerを作成
-    targetIDs.forEach((targetID) => {
-      createPeer({
-        initiator: true,
-        peerID: targetID,
-        stream: myStream,
-        onSignal: _onSignal,
-        onStream: _onStream,
-      })
-    })
-  }
-
-  const _signaling = ({
-    sdp,
-    type,
-    senderID,
-  }: {
-    sdp: string
-    type: RTCSdpType
-    senderID: string
-  }) => {
-    if (type === 'offer') {
-      createPeer({
-        initiator: false,
-        peerID: senderID,
-        stream: myStream,
-        onSignal: _onSignal,
-        onStream: _onStream,
-      })
-    }
-
-    setRemote({ data: { sdp, type }, peerID: senderID })
-  }
 
   return {
     initialConnect,
