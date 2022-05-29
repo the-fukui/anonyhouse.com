@@ -35,6 +35,6 @@ const Container = (props: ContainerProps) => {
   return { ...props, ...presenterProps }
 }
 
-export default function userControl(props: ContainerProps) {
+export default function UserControl(props: ContainerProps) {
   return <Presenter {...Container(props)} />
 }

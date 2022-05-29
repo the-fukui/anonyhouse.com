@@ -43,6 +43,6 @@ const Container = (props: ContainerProps) => {
   return { ...props, ...presenterProps }
 }
 
-export default function emojiPicker(props: ContainerProps) {
+export default function EmojiPicker(props: ContainerProps) {
   return <Presenter {...Container(props)} />
 }
