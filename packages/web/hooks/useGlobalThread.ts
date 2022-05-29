@@ -17,6 +17,7 @@ type ThreadUser = {
 } & Awaited<ReturnType<ThreadRepository['getUsers']>>['{userID}']
 
 interface ThreadState {
+  status: 'initial' | 'pending' | 'ok' | 'error'
   myID?: string
   users: ThreadUser[]
 }
@@ -24,6 +25,7 @@ interface ThreadState {
 const threadState = atom<ThreadState>({
   key: 'Thread',
   default: {
+    status: 'initial',
     myID: undefined,
     users: [],
   },
@@ -143,8 +145,11 @@ export const useGlobalThread = () => {
       }
 
       // main
-
-      if (!myAvatar) throw new Error('Avatar is not set')
+      setState((_state) => ({ ..._state, status: 'pending' }))
+      if (!myAvatar) {
+        setState((_state) => ({ ..._state, status: 'error' }))
+        throw new Error('Avatar is not set')
+      }
 
       // 1.DBにユーザー登録
       // 2.ユーザーID取得
@@ -155,7 +160,10 @@ export const useGlobalThread = () => {
       // 4.スレッドメンバーwatch
       await _watchUsers()
 
-      if (!myID.current) throw new Error("Couldn't get my ID")
+      if (!myID.current) {
+        setState((_state) => ({ ..._state, status: 'error' }))
+        throw new Error("Couldn't get my ID")
+      }
 
       // 5.自分宛てのSDPをwatchしておく
       threadRepository.onSDPReceived({
@@ -170,6 +178,8 @@ export const useGlobalThread = () => {
           .filter((user) => user.ID !== myID.current)
           .map((user) => user.ID),
       })
+
+      setState((_state) => ({ ..._state, status: 'ok' }))
     },
     [],
   )
