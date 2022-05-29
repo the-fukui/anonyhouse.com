@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { atom, useRecoilState } from 'recoil'
 
 interface UserMediaState {
@@ -18,6 +18,12 @@ const userMediaState = atom<UserMediaState>({
 
 export const useGlobalUserMedia = () => {
   const [state, setState] = useRecoilState(userMediaState)
+
+  useEffect(() => {
+    if (state.status !== 'initial') return
+
+    getUserMedia()
+  }, [])
 
   const getUserMedia = async () => {
     setState((_state) => ({ ..._state, state: 'pending' }))
