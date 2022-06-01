@@ -8,8 +8,8 @@ export enum RecoilAtomKeys {
   USER_MEDIA = 'UserMedia',
 }
 
-//   export enum RecoilSelectorKeys {
-//     TODO_TODOS = 'Todo_todos',
-//     TODO_TODO_ITEM = 'Todo_todoItem',
-//     NOTICE_HAS_UNREAD_NOTICE = 'Notice_hasUnreadNotice'
-//   }
+export enum RecoilSelectorKeys {
+  THREAD_MY_AVATAR = 'ThreadMyAvatar',
+  THREAD_MY_ID = 'ThreadMyID',
+  THREAD_STATUS = 'ThreadStatus',
+}

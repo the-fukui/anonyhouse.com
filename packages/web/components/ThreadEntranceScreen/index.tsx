@@ -1,7 +1,7 @@
 import EmojiPicker from '@web/components/EmojiPicker'
 import { useGlobalThread } from '@web/hooks/useGlobalThread'
-import { useGlobalUser } from '@web/hooks/useGlobalUser'
 import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
+import { useMyAvatar, useSetMyAvatar } from '@web/state/thread'
 
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -14,14 +14,14 @@ type ContainerProps = {
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
-  setAvatar,
+  setMyAvatar,
   myAvatar,
   myStreamStatus,
   onInitialConnect,
   threadStatus,
 }) => (
   <div className={`${className}`}>
-    <EmojiPicker onSelect={setAvatar} />
+    <EmojiPicker onSelect={setMyAvatar} />
     <button
       disabled={
         myStreamStatus !== 'ok' ||
@@ -39,9 +39,9 @@ const Container = (props: ContainerProps) => {
   const router = useRouter()
   const threadID = router.query.threadID as string
 
-  const { setAvatar } = useGlobalUser()
+  const setMyAvatar = useSetMyAvatar()
+  const myAvatar = useMyAvatar()
   const { stream: myStream, status: myStreamStatus } = useGlobalUserMedia()
-  const { avatar: myAvatar } = useGlobalUser()
   const { initialConnect, status: threadStatus } = useGlobalThread()
 
   const onInitialConnect = () => {
@@ -53,7 +53,7 @@ const Container = (props: ContainerProps) => {
   }
 
   const presenterProps = {
-    setAvatar,
+    setMyAvatar,
     onInitialConnect,
     myStreamStatus,
     myAvatar,
