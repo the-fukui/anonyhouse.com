@@ -1,3 +1,5 @@
+import { RecoilAtomKeys } from '@web/state/recoilKeys'
+
 import { atom } from 'recoil'
 
 interface UserMediaState {
@@ -7,7 +9,7 @@ interface UserMediaState {
 }
 
 export const userMediaState = atom<UserMediaState>({
-  key: 'UserMedia',
+  key: RecoilAtomKeys.USER_MEDIA,
   default: {
     stream: undefined,
     isMuted: true,
