@@ -48,10 +48,7 @@ const statusSelector = selector<ThreadState['status']>({
 
 export const useSetMyAvatar = () => {
   const setState = useSetRecoilState(threadState)
-  return useCallback(
-    (avatar: string) => setState((prev) => ({ ...prev, myAvatar: avatar })),
-    [],
-  )
+  return (avatar: string) => setState((prev) => ({ ...prev, myAvatar: avatar }))
 }
 
 /**

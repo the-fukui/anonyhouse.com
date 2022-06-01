@@ -2,6 +2,10 @@ import { RecoilAtomKeys } from '@web/state/recoilKeys'
 
 import { atom } from 'recoil'
 
+/**
+ * state
+ */
+
 interface UserMediaState {
   stream?: MediaStream
   isMuted: Boolean
@@ -16,3 +20,15 @@ export const userMediaState = atom<UserMediaState>({
     state: 'initial',
   },
 })
+
+/**
+ * selectors
+ */
+
+/**
+ * actions hook
+ */
+
+/**
+ * getters hook
+ */
