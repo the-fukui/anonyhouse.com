@@ -14,4 +14,8 @@ export enum RecoilSelectorKeys {
   THREAD_STATUS = 'ThreadStatus',
   THREAD_USER_USERS = 'ThreadUserUsers',
   THREAD_USER_USER = 'ThreadUserUser',
+  // USER_MEDIA_STREAM = 'UserMediaStream',
+  // USER_MEDIA_STATUS = 'UserMediaStatus',
+  // USER_MEDIA_IS_MUTED = 'UserMediaIsMuted',
+  USER_MEDIA = 'UserMedia',
 }
