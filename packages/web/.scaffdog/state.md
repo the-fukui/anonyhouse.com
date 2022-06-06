@@ -1,3 +1,15 @@
+---
+name: 'state'
+root: '.'
+output: '.'
+ignore: []
+questions:
+  name: 'Please enter state name.'
+---
+
+# `state/{{ inputs.name | camel }}.ts`
+
+```ts
 import { RecoilAtomKeys, RecoilSelectorKeys } from '@web/state/recoilKeys'
 
 import {
@@ -12,20 +24,11 @@ import {
  * state
  */
 
-type UserMediaStatus = 'initial' | 'pending' | 'ok' | 'error'
-interface State {
-  stream?: MediaStream
-  isMuted: Boolean
-  status: UserMediaStatus
-}
+interface State {}
 
 const state = atom<State>({
-  key: RecoilAtomKeys.USER_MEDIA,
-  default: {
-    stream: undefined,
-    isMuted: true,
-    status: 'initial',
-  },
+  key: RecoilAtomKeys.{{ inputs.name | snake | upper }},
+  default: {},
 })
 
 /**
@@ -36,7 +39,7 @@ const stateSelector = <T extends keyof State>(
   key: T,
 ): RecoilValueReadOnly<State[T]> =>
   selectorFamily({
-    key: RecoilSelectorKeys.USER_MEDIA,
+    key: RecoilSelectorKeys.{{ inputs.name | snake | upper }},
     get:
       () =>
       ({ get }) =>
@@ -52,7 +55,7 @@ const useSetState = <T extends keyof State>(key: T) => {
   return (value: State[T]) => setState((prev) => ({ ...prev, value }))
 }
 
-export const useSetUserMediaState = useSetState
+export const useSet{{ inputs.name | pascal }}State = useSetState
 
 /**
  * getters hook
@@ -61,4 +64,6 @@ export const useSetUserMediaState = useSetState
 const useStateValue = <T extends keyof State>(key: T): State[T] =>
   useRecoilValue(stateSelector(key))
 
-export const useUserMediaStateValue = useStateValue
+export const use{{ inputs.name | pascal }}StateValue = useStateValue
+
+```
