@@ -1,6 +1,5 @@
 import EmojiPicker from '@web/components/EmojiPicker'
 import { useGlobalThread } from '@web/hooks/useGlobalThread'
-import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
 import { getUserMedia } from '@web/modules/userMedia'
 import { useMyAvatar, useSetMyAvatar } from '@web/state/thread'
 import {

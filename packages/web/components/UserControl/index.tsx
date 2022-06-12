@@ -1,4 +1,5 @@
-import { useGlobalUserMedia } from '@web/hooks/useGlobalUserMedia'
+import { toggleMute as _toggleMute } from '@web/modules/userMedia'
+import { useUserMediaStateValue } from '@web/state/userMedia'
 
 import React, { useEffect } from 'react'
 
@@ -19,7 +20,9 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: ContainerProps) => {
-  const { isMuted, toggleMute } = useGlobalUserMedia()
+  const isMuted = useUserMediaStateValue('isMuted')
+  const stream = useUserMediaStateValue('stream')
+  const toggleMute = stream ? () => _toggleMute(stream) : () => {}
 
   const presenterProps = {
     isMuted,
