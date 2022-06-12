@@ -4,6 +4,7 @@ import {
   RecoilValueReadOnly,
   atom,
   selectorFamily,
+  useRecoilCallback,
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil'
@@ -48,8 +49,13 @@ const stateSelector = <T extends keyof State>(
  */
 
 const useSetState = <T extends keyof State>(key: T) => {
-  const setState = useSetRecoilState(state)
-  return (value: State[T]) => setState((prev) => ({ ...prev, value }))
+  return useRecoilCallback(
+    ({ set }) =>
+      async (value: State[T]) => {
+        set(state, (prev) => ({ ...prev, [key]: value }))
+      },
+    [],
+  )
 }
 
 export const useSetUserMediaState = useSetState

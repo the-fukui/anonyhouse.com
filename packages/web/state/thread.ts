@@ -1,25 +1,46 @@
-import { RecoilAtomKeys } from '@web/state/recoilKeys'
+import { RecoilAtomKeys, RecoilSelectorKeys } from '@web/state/recoilKeys'
 
-import { useCallback } from 'react'
-import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil'
-
-import { RecoilSelectorKeys } from './recoilKeys'
+import {
+  RecoilValueReadOnly,
+  atom,
+  selectorFamily,
+  useRecoilCallback,
+  useRecoilValue,
+} from 'recoil'
 
 /**
  * state
  */
-interface ThreadState {
-  status: 'initial' | 'pending' | 'ok' | 'error'
-  myID?: string
+
+type InitialConnectArguments = {
+  threadID: string
+  myStream?: MediaStream
   myAvatar?: string
 }
 
-const threadState = atom<ThreadState>({
+type ThreadUser = {
+  ID: string
+  AudioRef?: HTMLAudioElement
+  avatar: string
+  timestamp: number
+}
+
+interface State {
+  status: 'initial' | 'pending' | 'ok' | 'error'
+  myID?: string
+  myAvatar?: string
+  users: ThreadUser[]
+  initialConnect: (args: InitialConnectArguments) => void
+}
+
+const state = atom<State>({
   key: RecoilAtomKeys.THREAD,
   default: {
     status: 'initial',
     myID: undefined,
     myAvatar: undefined,
+    users: [],
+    initialConnect: () => {},
   },
 })
 
@@ -27,32 +48,38 @@ const threadState = atom<ThreadState>({
  * selectors
  */
 
-const myAvatarSelector = selector<ThreadState['myAvatar']>({
-  key: RecoilSelectorKeys.THREAD_MY_AVATAR,
-  get: ({ get }) => get(threadState).myAvatar,
-})
-
-const myIDSelector = selector<ThreadState['myID']>({
-  key: RecoilSelectorKeys.THREAD_MY_ID,
-  get: ({ get }) => get(threadState).myID,
-})
-
-const statusSelector = selector<ThreadState['status']>({
-  key: RecoilSelectorKeys.THREAD_STATUS,
-  get: ({ get }) => get(threadState).status,
-})
+const stateSelector = <T extends keyof State>(
+  key: T,
+): RecoilValueReadOnly<State[T]> =>
+  selectorFamily({
+    key: RecoilSelectorKeys.THREAD,
+    get:
+      () =>
+      ({ get }) =>
+        get(state)[key],
+  })(key)
 
 /**
  * actions hook
  */
 
-export const useSetMyAvatar = () => {
-  const setState = useSetRecoilState(threadState)
-  return (avatar: string) => setState((prev) => ({ ...prev, myAvatar: avatar }))
+const useSetState = <T extends keyof State>(key: T) => {
+  return useRecoilCallback(
+    ({ set }) =>
+      async (value: State[T]) => {
+        set(state, (prev) => ({ ...prev, [key]: value }))
+      },
+    [],
+  )
 }
+
+export const useSetThreadState = useSetState
 
 /**
  * getters hook
  */
 
-export const useMyAvatar = () => useRecoilValue(myAvatarSelector)
+const useStateValue = <T extends keyof State>(key: T): State[T] =>
+  useRecoilValue(stateSelector(key))
+
+export const useThreadStateValue = useStateValue

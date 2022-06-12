@@ -1,7 +1,6 @@
 import EmojiPicker from '@web/components/EmojiPicker'
-import { useGlobalThread } from '@web/hooks/useGlobalThread'
 import { getUserMedia } from '@web/modules/userMedia'
-import { useMyAvatar, useSetMyAvatar } from '@web/state/thread'
+import { useSetThreadState, useThreadStateValue } from '@web/state/thread'
 import {
   useSetUserMediaState,
   useUserMediaStateValue,
@@ -44,8 +43,8 @@ const Container = (props: ContainerProps) => {
   const threadID = router.query.threadID as string
 
   //avatar
-  const setMyAvatar = useSetMyAvatar()
-  const myAvatar = useMyAvatar()
+  const setMyAvatar = useSetThreadState('myAvatar')
+  const myAvatar = useThreadStateValue('myAvatar')
 
   //userMedia
   const setMyStream = useSetUserMediaState('stream')
@@ -55,12 +54,16 @@ const Container = (props: ContainerProps) => {
 
   useEffect(() => {
     getUserMedia()
-      .then((stream) => setMyStream(stream))
+      .then((stream) => {
+        setMyStream(stream)
+        setMyStreamStatus('ok')
+      })
       .catch(() => setMyStreamStatus('error'))
   }, [])
 
   //thread
-  const { initialConnect, status: threadStatus } = useGlobalThread()
+  const threadStatus = useThreadStateValue('status')
+  const initialConnect = useThreadStateValue('initialConnect')
   const onInitialConnect = () => {
     initialConnect({
       threadID,

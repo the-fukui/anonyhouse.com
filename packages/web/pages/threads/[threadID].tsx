@@ -1,15 +1,20 @@
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
 import ThreadUserList from '@web/components/ThreadUserList'
 import UserControl from '@web/components/UserControl'
-import { useGlobalThread } from '@web/hooks/useGlobalThread'
+import { useThread } from '@web/hooks/useThread'
+import { useSetThreadState, useThreadStateValue } from '@web/state/thread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   threadStatus,
+  myAvatar,
+  status,
 }) => (
   <div>
+    <div>myavatar:{myAvatar}</div>
+    <div>status:{status}</div>
     {['error', 'initial', 'pending'].includes(threadStatus) ? (
       <ThreadEntranceScreen />
     ) : (
@@ -22,9 +27,28 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
-  const { status: threadStatus } = useGlobalThread()
+  //thread
+  const {
+    status: threadStatus,
+    users: threadUsers,
+    initialConnect,
+  } = useThread()
+  const setStatus = useSetThreadState('status')
+  const setUsers = useSetThreadState('users')
+  const setInitialConnect = useSetThreadState('initialConnect')
+
+  useEffect(() => {
+    setStatus(threadStatus)
+    setUsers(threadUsers)
+    setInitialConnect(initialConnect)
+  }, [threadStatus, threadUsers, initialConnect])
+
+  const myAvatar = useThreadStateValue('myAvatar')
+  const status = useThreadStateValue('status')
 
   const presenterProps = {
+    myAvatar,
+    status,
     threadStatus,
   }
   return { ...props, ...presenterProps }

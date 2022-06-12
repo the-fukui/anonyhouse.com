@@ -22,27 +22,12 @@ interface ThreadState {
   users: ThreadUser[]
 }
 
-const threadState = atom<ThreadState>({
-  key: 'Thread',
-  default: {
+export const useThread = () => {
+  const [state, setState] = useState<ThreadState>({
     status: 'initial',
-    myID: undefined,
     users: [],
-  },
-})
-
-export const useGlobalThread = () => {
-  const [state, setState] = useRecoilState(threadState)
-  /**
-   * hook内でのRecoil stateはuseEffect+useRefで状態変化を監視しないといけない
-   * @see https://dev.to/natelindev/use-recoil-in-react-custom-hooks-52j5
-   */
-  const myID = useRef(state.myID)
-
-  useEffect(() => {
-    myID.current = state.myID
-  }, [state])
-
+  })
+  const myID = useRef<string>('')
   const initialUsers = useRef<ThreadUser[]>([])
   const { createPeer, setRemote } = usePeer()
 
@@ -64,7 +49,7 @@ export const useGlobalThread = () => {
       const _registerUser = async (myAvatar: string) => {
         const userID = await threadRepository.registerUser(myAvatar)
         setState((_state) => ({ ..._state, myID: userID }))
-        return userID
+        myID.current = userID
       }
 
       const _getUsers = async () => {
@@ -160,12 +145,8 @@ export const useGlobalThread = () => {
       // 4.スレッドメンバーwatch
       await _watchUsers()
 
-      if (!myID.current) {
-        setState((_state) => ({ ..._state, status: 'error' }))
-        throw new Error("Couldn't get my ID")
-      }
-
       // 5.自分宛てのSDPをwatchしておく
+      if (!myID.current) throw new Error("Couldn't get my ID")
       threadRepository.onSDPReceived({
         myID: myID.current,
         callback: _signaling,
@@ -181,7 +162,7 @@ export const useGlobalThread = () => {
 
       setState((_state) => ({ ..._state, status: 'ok' }))
     },
-    [],
+    [state],
   )
 
   return {
