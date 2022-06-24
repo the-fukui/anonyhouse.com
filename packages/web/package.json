@@ -14,20 +14,20 @@
     "emoji-mart": "^5.0.0",
     "firebase": "^9.8.1",
     "next": "^12.1.6",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "recoil": "^0.7.3-alpha.2",
     "simple-peer": "^9.11.1"
   },
   "devDependencies": {
     "@types/emoji-mart": "^3.0.9",
-    "@types/node": "17.0.33",
-    "@types/react": "18.0.9",
+    "@types/node": "18.0.0",
+    "@types/react": "18.0.14",
+    "eslint": "8.18.0",
     "@types/simple-peer": "^9.11.4",
-    "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
-    "prettier-plugin-scaffdog": "^1.2.0",
-    "scaffdog": "^1.2.0",
-    "typescript": "4.6.4"
+    "prettier-plugin-scaffdog": "^1.4.0",
+    "scaffdog": "^1.4.0",
+    "typescript": "4.7.4"
   }
 }
