@@ -11,12 +11,12 @@
     "scaffold": "scaffdog generate"
   },
   "dependencies": {
-    "emoji-mart": "^5.0.0",
-    "firebase": "^9.8.1",
+    "emoji-mart": "^5.1.0",
+    "firebase": "^9.8.4",
     "next": "^12.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "recoil": "^0.7.3-alpha.2",
+    "recoil": "^0.7.4",
     "simple-peer": "^9.11.1"
   },
   "devDependencies": {
