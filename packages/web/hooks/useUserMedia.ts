@@ -45,8 +45,10 @@ export const useUserMedia = () => {
 
   const toggleMute = useRecoilCallback(({ snapshot }) => async () => {
     const { stream } = await snapshot.getPromise(state)
+
     if (stream) {
       stream.getTracks().forEach((track) => (track.enabled = !track.enabled))
+      setUserMedia((_state) => ({ ..._state, isMuted: !_state.isMuted }))
     }
   })
 

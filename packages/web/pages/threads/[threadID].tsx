@@ -1,3 +1,4 @@
+import ThreadControl from '@web/components/ThreadControl'
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
 import ThreadUserList from '@web/components/ThreadUserList'
 import { useGetThread } from '@web/hooks/useThread'
@@ -13,6 +14,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
     {isEntered ? (
       <>
         <ThreadUserList />
+        <ThreadControl />
       </>
     ) : (
       <ThreadEntranceScreen threadID={threadID} />

@@ -1,5 +1,4 @@
-import { toggleMute as _toggleMute } from '@web/modules/userMedia'
-import { useUserMediaStateValue } from '@web/state/userMedia'
+import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import React, { useEffect } from 'react'
 
@@ -20,9 +19,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: ContainerProps) => {
-  const isMuted = useUserMediaStateValue('isMuted')
-  const stream = useUserMediaStateValue('stream')
-  const toggleMute = stream ? () => _toggleMute(stream) : () => {}
+  const { isMuted, toggleMute } = useUserMedia()
 
   const presenterProps = {
     isMuted,
@@ -31,6 +28,6 @@ const Container = (props: ContainerProps) => {
   return { ...props, ...presenterProps }
 }
 
-export default function UserControl(props: ContainerProps) {
+export default function ThreadControl(props: ContainerProps) {
   return <Presenter {...Container(props)} />
 }
