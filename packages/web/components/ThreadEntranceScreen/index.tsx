@@ -3,6 +3,7 @@ import { useThread } from '@web/hooks/useThread'
 import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import React, { useEffect, useRef, useState } from 'react'
+import { useModal } from 'react-hooks-use-modal'
 
 import style from './index.module.scss'
 
@@ -14,11 +15,24 @@ type ContainerProps = {
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   setMyAvatar,
+  myAvatar,
   isEnterButtonDisabled,
   onEnter,
+  Modal,
+  openModal,
+  closeModal,
 }) => (
   <div className={`${className}`}>
-    <EmojiPicker onSelect={setMyAvatar} />
+    <button onClick={openModal}>{myAvatar}</button>
+    <Modal>
+      <EmojiPicker
+        onSelect={(emoji) => {
+          console.log(emoji)
+          setMyAvatar(emoji)
+          closeModal()
+        }}
+      />
+    </Modal>
     <button onClick={onEnter} disabled={isEnterButtonDisabled}>
       initialConnect
     </button>
@@ -29,7 +43,7 @@ const Container = (props: ContainerProps) => {
   const { threadID } = props
 
   //avatar
-  const [myAvatar, setMyAvatar] = useState<string>()
+  const [myAvatar, setMyAvatar] = useState<string>('😀')
 
   //userMedia
   const { stream: myStream, status: myStreamStatus } = useUserMedia()
@@ -45,10 +59,16 @@ const Container = (props: ContainerProps) => {
   const onEnter = () =>
     myStream && myAvatar && initialConnect({ threadID, myStream, myAvatar })
 
+  const [Modal, openModal, closeModal] = useModal('modal')
+
   const presenterProps = {
     setMyAvatar,
+    myAvatar,
     isEnterButtonDisabled,
     onEnter,
+    Modal,
+    closeModal,
+    openModal,
   }
   return { ...props, ...presenterProps }
 }
