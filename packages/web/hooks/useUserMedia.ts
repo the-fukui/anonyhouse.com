@@ -25,6 +25,8 @@ export const useUserMedia = () => {
    * Streamを取得する
    */
   useEffect(() => {
+    if (userMedia.status === 'ok') return
+
     setUserMedia((_state) => ({ ..._state, status: 'pending' }))
 
     navigator.mediaDevices

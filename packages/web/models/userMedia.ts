@@ -1,5 +1,5 @@
 export type UserMedia = {
   status: 'initial' | 'pending' | 'ok' | 'error'
-  stream: MediaStream
+  stream?: MediaStream
   isMuted: boolean
 }
