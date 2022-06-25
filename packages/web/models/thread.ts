@@ -11,7 +11,8 @@ export type MyInfo = {
 }
 
 export type Thread = {
+  ID?: string
   status: 'initial' | 'pending' | 'ok' | 'error'
-  myInfo: MyInfo
+  myInfo?: MyInfo
   users: ThreadUser[]
 }
