@@ -1,3 +1,4 @@
+import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
 import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import React, { useEffect } from 'react'
@@ -12,18 +13,28 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   isMuted,
   toggleMute,
+  onExit,
 }) => (
   <div className={`${className}`}>
     Mute:<button onClick={toggleMute}>{isMuted ? 'off' : 'on'}</button>
+    <button onClick={onExit}>退室</button>
   </div>
 )
 
 const Container = (props: ContainerProps) => {
   const { isMuted, toggleMute } = useUserMedia()
+  const { enableLoading } = useLoadingScreen()
+
+  const onExit = async () => {
+    enableLoading()
+    !isMuted && toggleMute()
+    window.location.reload()
+  }
 
   const presenterProps = {
     isMuted,
     toggleMute,
+    onExit,
   }
   return { ...props, ...presenterProps }
 }

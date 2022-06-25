@@ -1,4 +1,5 @@
 import EmojiPicker from '@web/components/EmojiPicker'
+import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
 import { useThread } from '@web/hooks/useThread'
 import { useUserMedia } from '@web/hooks/useUserMedia'
 
@@ -41,6 +42,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 
 const Container = (props: ContainerProps) => {
   const { threadID } = props
+  const { enableLoading, disableLoading } = useLoadingScreen()
 
   //avatar
   const [myAvatar, setMyAvatar] = useState<string>('😀')
@@ -56,8 +58,13 @@ const Container = (props: ContainerProps) => {
     !Boolean(myAvatar) ||
     ['ok', 'pending'].includes(threadStatus)
 
-  const onEnter = () =>
-    myStream && myAvatar && initialConnect({ threadID, myStream, myAvatar })
+  const onEnter = async () => {
+    enableLoading()
+    myStream &&
+      myAvatar &&
+      (await initialConnect({ threadID, myStream, myAvatar }))
+    disableLoading()
+  }
 
   const [Modal, openModal, closeModal] = useModal('modal')
 
