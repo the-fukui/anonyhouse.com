@@ -82,7 +82,24 @@ export const useThread = () => {
         })
       }
 
-      const _onStream = (stream: MediaStream, peerID: string) => {}
+      const _onStream = (stream: MediaStream, peerID: string) => {
+        //Audioを作成してStreamを再生
+        const audio = document.createElement('audio')
+        audio.srcObject = stream
+        audio.autoplay = true
+        audio.play()
+
+        //Audioをstateのusersに追加
+        setThread((_state) => ({
+          ..._state,
+          users: _state.users.map((user) => {
+            if (user.ID === peerID) {
+              return { ...user, AudioRef: audio }
+            }
+            return user
+          }),
+        }))
+      }
 
       const _onSignal = (data: SignalData, peerID: string) => {
         if (!myID.current) throw new Error("Couldn't get my ID")
@@ -140,7 +157,6 @@ export const useThread = () => {
 
       // 1.DBにユーザー登録
       // 2.ユーザーID取得
-      await _registerUser()
       myID.current = await _registerUser()
       setThread((_state) => ({
         ..._state,

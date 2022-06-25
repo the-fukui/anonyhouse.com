@@ -1,4 +1,5 @@
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
+import ThreadUserList from '@web/components/ThreadUserList'
 import { useGetThread } from '@web/hooks/useThread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
@@ -9,7 +10,13 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   isEntered,
 }) => (
   <div>
-    {isEntered ? <div></div> : <ThreadEntranceScreen threadID={threadID} />}
+    {isEntered ? (
+      <>
+        <ThreadUserList />
+      </>
+    ) : (
+      <ThreadEntranceScreen threadID={threadID} />
+    )}
   </div>
 )
 

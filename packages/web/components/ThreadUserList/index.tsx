@@ -1,3 +1,4 @@
+import { useGetThread } from '@web/hooks/useThread'
 import { useThreadStateValue } from '@web/state/thread'
 
 import React from 'react'
@@ -26,12 +27,11 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: ContainerProps) => {
-  const users = useThreadStateValue('users')
-  const myID = useThreadStateValue('myID')
+  const { users, myInfo } = useGetThread()
 
   const presenterProps = {
     users,
-    myID,
+    myID: myInfo?.ID,
   }
   return { ...props, ...presenterProps }
 }
