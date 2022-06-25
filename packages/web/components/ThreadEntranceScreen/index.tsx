@@ -1,83 +1,54 @@
 import EmojiPicker from '@web/components/EmojiPicker'
-import { getUserMedia } from '@web/modules/userMedia'
-import { useSetThreadState, useThreadStateValue } from '@web/state/thread'
-import {
-  useSetUserMediaState,
-  useUserMediaStateValue,
-} from '@web/state/userMedia'
+import { useThread } from '@web/hooks/useThread'
+import { useUserMedia } from '@web/hooks/useUserMedia'
 
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import style from './index.module.scss'
 
 type ContainerProps = {
   className?: string
+  threadID: string
 }
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   setMyAvatar,
-  myAvatar,
-  myStreamStatus,
-  onInitialConnect,
-  threadStatus,
+  isEnterButtonDisabled,
+  onEnter,
 }) => (
   <div className={`${className}`}>
     <EmojiPicker onSelect={setMyAvatar} />
-    <button
-      disabled={
-        myStreamStatus !== 'ok' ||
-        !Boolean(myAvatar) ||
-        ['ok', 'pending'].includes(threadStatus)
-      }
-      onClick={onInitialConnect}
-    >
+    <button onClick={onEnter} disabled={isEnterButtonDisabled}>
       initialConnect
     </button>
   </div>
 )
 
 const Container = (props: ContainerProps) => {
-  const router = useRouter()
-  const threadID = router.query.threadID as string
+  const { threadID } = props
 
   //avatar
-  const setMyAvatar = useSetThreadState('myAvatar')
-  const myAvatar = useThreadStateValue('myAvatar')
+  const [myAvatar, setMyAvatar] = useState<string>()
 
   //userMedia
-  const setMyStream = useSetUserMediaState('stream')
-  const myStream = useUserMediaStateValue('stream')
-  const setMyStreamStatus = useSetUserMediaState('status')
-  const myStreamStatus = useUserMediaStateValue('status')
-
-  useEffect(() => {
-    getUserMedia()
-      .then((stream) => {
-        setMyStream(stream)
-        setMyStreamStatus('ok')
-      })
-      .catch(() => setMyStreamStatus('error'))
-  }, [])
+  const { stream: myStream, status: myStreamStatus } = useUserMedia()
 
   //thread
-  const threadStatus = useThreadStateValue('status')
-  const initialConnect = useThreadStateValue('initialConnect')
-  const onInitialConnect = () => {
-    initialConnect({
-      threadID,
-      myStream,
-      myAvatar,
-    })
-  }
+  const { initialConnect, status: threadStatus } = useThread()
+
+  const isEnterButtonDisabled =
+    myStreamStatus !== 'ok' ||
+    !Boolean(myAvatar) ||
+    ['ok', 'pending'].includes(threadStatus)
+
+  const onEnter = () =>
+    myStream && myAvatar && initialConnect({ threadID, myStream, myAvatar })
 
   const presenterProps = {
     setMyAvatar,
-    onInitialConnect,
-    myStreamStatus,
-    myAvatar,
-    threadStatus,
+    isEnterButtonDisabled,
+    onEnter,
   }
   return { ...props, ...presenterProps }
 }
