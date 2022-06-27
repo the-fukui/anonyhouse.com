@@ -1,3 +1,7 @@
+/**
+ * Client
+ */
+
 export type ThreadUser = {
   ID: string
   AudioRef?: HTMLAudioElement

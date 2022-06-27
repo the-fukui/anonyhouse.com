@@ -2,10 +2,16 @@ namespace RTDB {
   type userID = string
   type threadID = string
 
+  export const ThreadCategory = {
+    language: ['japanese'],
+    sports: ['basketball', 'football', 'baseball'],
+  } as const
+
+  type ThreadCategoryUnion =
+    typeof ThreadCategory[keyof typeof ThreadCategory][number]
   interface Tree {
     threads: {
       [key: threadID]: {
-        title: string
         timestamp: number
         users: {
           [key: userID]: {
@@ -13,6 +19,14 @@ namespace RTDB {
             timestamp: number
           }
         }
+      }
+    }
+    threadInfo: {
+      [key: threadID]: {
+        title: string
+        category: ThreadCategoryUnion
+        capacity: number
+        timestamp: number
       }
     }
     signaling: {
