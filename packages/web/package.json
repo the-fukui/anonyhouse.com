@@ -25,7 +25,7 @@
     "@types/react": "18.0.14",
     "eslint": "8.18.0",
     "@types/simple-peer": "^9.11.4",
-    "eslint-config-next": "12.1.6",
+    "eslint-config-next": "12.2.0",
     "scaffdog": "^1.5.0",
     "prettier-plugin-scaffdog": "^1.5.0",
     "typescript": "4.7.4"
