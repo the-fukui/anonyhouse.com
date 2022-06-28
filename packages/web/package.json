@@ -13,7 +13,7 @@
   "dependencies": {
     "emoji-mart": "^5.1.0",
     "firebase": "^9.8.4",
-    "next": "^12.1.6",
+    "next": "^12.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recoil": "^0.7.4",
