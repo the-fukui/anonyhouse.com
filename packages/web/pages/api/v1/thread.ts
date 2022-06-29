@@ -2,14 +2,11 @@ import { ThreadRepository } from '@web/repository/api/thread'
 
 import short from 'short-uuid'
 
+import { BodyParams } from './thread.validation'
+
 // import { validate } from '~/validator/types.validator'
 
 //JSONで送る
-export interface BodyParams {
-  title: string
-  category: RTDB.ThreadCategoryUnion
-  capacity: number
-}
 
 export interface Response {
   id: string
