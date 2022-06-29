@@ -13,7 +13,7 @@
   "dependencies": {
     "emoji-mart": "^5.1.0",
     "firebase": "^9.8.4",
-    "next": "^12.1.6",
+    "next": "^12.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recoil": "^0.7.4",
@@ -25,9 +25,9 @@
     "@types/react": "18.0.14",
     "eslint": "8.18.0",
     "@types/simple-peer": "^9.11.4",
-    "eslint-config-next": "12.1.6",
-    "scaffdog": "^1.5.0",
+    "eslint-config-next": "12.2.0",
     "prettier-plugin-scaffdog": "^1.5.0",
+    "scaffdog": "^1.5.0",
     "typescript": "4.7.4"
   }
 }
