@@ -2,9 +2,9 @@ namespace RTDB {
   type userID = string
   type threadID = string
 
-  type ThreadCategories = typeof import('../constants/thread').CATEGORIES
+  type ThreadTags = typeof import('../constants/thread').TAG_ITEMS
 
-  type ThreadCategoryUnion = ThreadCategories[keyof ThreadCategories][number]
+  type ThreadTagUnion = ThreadTags[number]['slug']
   interface Tree {
     threads: {
       [key: threadID]: {
@@ -20,7 +20,7 @@ namespace RTDB {
     threadInfo: {
       [key: threadID]: {
         title: string
-        category: ThreadCategoryUnion
+        tags: ThreadTagUnion[]
         capacity: number
         timestamp: number
       }

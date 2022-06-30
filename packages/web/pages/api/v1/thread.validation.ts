@@ -1,5 +1,5 @@
 export interface BodyParams {
   title: string
-  category: RTDB.ThreadCategoryUnion
+  tags: RTDB.ThreadTagUnion[]
   capacity: number
 }

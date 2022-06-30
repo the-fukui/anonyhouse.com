@@ -2,7 +2,7 @@ import { Firebase } from '@web/infrastructure/api/firebase'
 
 type CreateThreadData = {
   title: string
-  category: RTDB.ThreadCategoryUnion
+  tags: RTDB.ThreadTagUnion[]
   capacity: number
 }
 
