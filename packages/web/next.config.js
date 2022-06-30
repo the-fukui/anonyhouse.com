@@ -5,14 +5,13 @@ const path = require('path')
 const nextConfig = withReactSvg({
   reactStrictMode: true,
   experimental: {
+    externalDir: true,
     swcMinify: true,
     // concurrentFeatures: true,
     // serverComponents: true,
   },
+  transpileModules: ['../shared/**/*.ts'],
   include: path.resolve(__dirname, 'components/svg'),
-  webpack(config, options) {
-    return config
-  },
 })
 
 module.exports = nextConfig

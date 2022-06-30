@@ -1,12 +1,11 @@
 import { ThreadRepository } from '@web/repository/api/thread'
+import { validate } from '@web/utils/validator/validator'
+
+import { MAX_CAPACITY } from '@shared/constants/thread'
 
 import short from 'short-uuid'
 
 import { BodyParams } from './thread.validation'
-
-// import { validate } from '~/validator/types.validator'
-
-//JSONで送る
 
 export interface Response {
   id: string
@@ -21,13 +20,10 @@ const handler: NextApiHandler<{}, BodyParams> = async (req, res) => {
 
   //パラメータ不足 or 不正
   const { body } = req
-  // let validatedBody = null
-  // try {
-  //   validatedBody = validate('CreateRoomBody')(body)
-  // } catch (e) {
-  //   console.log(e)
-  //   return res.status(400).json({ Eror: { Message: '400 Bad Request' } })
-  // }
+  const { isValid } = validate(body, 'BodyParams')
+  const isValidCapacity = body.capacity <= MAX_CAPACITY
+  if (!isValid || !isValidCapacity)
+    return res.status(400).json({ Eror: { Message: '400 Bad Request' } })
 
   //recaptcha検証
   // if (process.env.NODE_ENV === 'production') {

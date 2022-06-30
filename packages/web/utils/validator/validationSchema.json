@@ -20,6 +20,61 @@
             ],
             "type": "object"
         },
+        "RTDB.ThreadCategories": {
+            "properties": {
+                "language": {
+                    "default": [
+                        "japanese"
+                    ],
+                    "items": [
+                        {
+                            "enum": [
+                                "japanese"
+                            ],
+                            "type": "string"
+                        }
+                    ],
+                    "maxItems": 1,
+                    "minItems": 1,
+                    "type": "array"
+                },
+                "sports": {
+                    "default": [
+                        "basketball",
+                        "football",
+                        "baseball"
+                    ],
+                    "items": [
+                        {
+                            "enum": [
+                                "basketball"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "enum": [
+                                "football"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "enum": [
+                                "baseball"
+                            ],
+                            "type": "string"
+                        }
+                    ],
+                    "maxItems": 3,
+                    "minItems": 3,
+                    "type": "array"
+                }
+            },
+            "required": [
+                "language",
+                "sports"
+            ],
+            "type": "object"
+        },
         "RTDB.ThreadCategoryUnion": {
             "enum": [
                 "baseball",

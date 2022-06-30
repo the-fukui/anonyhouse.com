@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn generateValidationSchema && next build",
     "start": "next start",
     "lint": "next lint",
     "scaffold": "scaffdog generate",
-    "generateValidator": "typescript-json-schema ./tsconfig.json '*' --include ./{pages,components}/**/*.validation.ts --include ../shared/@types/realtimeDatabase.d.ts --ignoreErrors --required -o ./utils/validatorSchema.json"
+    "generateValidationSchema": "typescript-json-schema ./tsconfig.json '*' --include ./{pages,components}/**/*.validation.ts --include ../shared/@types/realtimeDatabase.d.ts --include ../shared/constants/**/*.ts --ignoreErrors --required -o ./utils/validator/validationSchema.json"
   },
   "dependencies": {
+    "ajv": "^8.11.0",
     "emoji-mart": "^5.1.0",
     "firebase": "^9.8.4",
     "firebase-admin": "^11.0.0",
@@ -31,6 +32,7 @@
     "@types/simple-peer": "^9.11.4",
     "eslint": "8.18.0",
     "eslint-config-next": "12.2.0",
+    "next-transpile-modules": "^9.0.0",
     "prettier-plugin-scaffdog": "^1.5.0",
     "sass": "^1.53.0",
     "scaffdog": "^1.5.0",

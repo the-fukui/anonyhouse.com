@@ -2,13 +2,9 @@ namespace RTDB {
   type userID = string
   type threadID = string
 
-  export const ThreadCategory = {
-    language: ['japanese'],
-    sports: ['basketball', 'football', 'baseball'],
-  } as const
+  type ThreadCategories = typeof import('../constants/thread').CATEGORIES
 
-  type ThreadCategoryUnion =
-    typeof ThreadCategory[keyof typeof ThreadCategory][number]
+  type ThreadCategoryUnion = ThreadCategories[keyof ThreadCategories][number]
   interface Tree {
     threads: {
       [key: threadID]: {

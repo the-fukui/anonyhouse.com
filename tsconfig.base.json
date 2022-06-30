@@ -4,7 +4,8 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "@web/*": ["./packages/web/*"]
+      "@web/*": ["./packages/web/*"],
+      "@shared/*": ["./packages/shared/*"]
     },
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
