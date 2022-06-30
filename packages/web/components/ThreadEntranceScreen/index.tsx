@@ -3,8 +3,8 @@ import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
 import { useThread } from '@web/hooks/useThread'
 import { useUserMedia } from '@web/hooks/useUserMedia'
 
+import { useModals } from '@mantine/modals'
 import React, { useEffect, useRef, useState } from 'react'
-import { useModal } from 'react-hooks-use-modal'
 
 import style from './index.module.scss'
 
@@ -19,21 +19,10 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   myAvatar,
   isEnterButtonDisabled,
   onEnter,
-  Modal,
-  openModal,
-  closeModal,
+  openEmojiPickerModal,
 }) => (
   <div className={`${className}`}>
-    <button onClick={openModal}>{myAvatar}</button>
-    <Modal>
-      <EmojiPicker
-        onSelect={(emoji) => {
-          console.log(emoji)
-          setMyAvatar(emoji)
-          closeModal()
-        }}
-      />
-    </Modal>
+    <button onClick={openEmojiPickerModal}>{myAvatar}</button>
     <button onClick={onEnter} disabled={isEnterButtonDisabled}>
       initialConnect
     </button>
@@ -53,11 +42,13 @@ const Container = (props: ContainerProps) => {
   //thread
   const { initialConnect, status: threadStatus } = useThread()
 
+  //入室ボタン活性判定
   const isEnterButtonDisabled =
     myStreamStatus !== 'ok' ||
     !Boolean(myAvatar) ||
     ['ok', 'pending'].includes(threadStatus)
 
+  //入室時
   const onEnter = async () => {
     enableLoading()
     myStream &&
@@ -66,16 +57,34 @@ const Container = (props: ContainerProps) => {
     disableLoading()
   }
 
-  const [Modal, openModal, closeModal] = useModal('modal')
+  //絵文字選択モーダル
+  // todo: コンポーネント分ける
+  const modals = useModals()
+  const openEmojiPickerModal = () => {
+    const id = modals.openModal({
+      padding: 0,
+      withCloseButton: false,
+      size: 'auto',
+      children: (
+        <>
+          <EmojiPicker
+            onSelect={(emoji) => {
+              console.log(emoji)
+              setMyAvatar(emoji)
+              modals.closeModal(id)
+            }}
+          />
+        </>
+      ),
+    })
+  }
 
   const presenterProps = {
     setMyAvatar,
     myAvatar,
     isEnterButtonDisabled,
     onEnter,
-    Modal,
-    closeModal,
-    openModal,
+    openEmojiPickerModal,
   }
   return { ...props, ...presenterProps }
 }
