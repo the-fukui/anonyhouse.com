@@ -1,3 +1,5 @@
+import LoadingScreen from '@web/components/LoadingScreen'
+
 import type { AppProps } from 'next/app'
 import React from 'react'
 import { RecoilRoot } from 'recoil'
@@ -9,6 +11,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     <React.StrictMode>
       <RecoilRoot>
         <Component {...pageProps} />
+        <div id="modal"></div>
+        <LoadingScreen />
       </RecoilRoot>
     </React.StrictMode>
   )

@@ -1,83 +1,81 @@
 import EmojiPicker from '@web/components/EmojiPicker'
-import { getUserMedia } from '@web/modules/userMedia'
-import { useSetThreadState, useThreadStateValue } from '@web/state/thread'
-import {
-  useSetUserMediaState,
-  useUserMediaStateValue,
-} from '@web/state/userMedia'
+import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
+import { useThread } from '@web/hooks/useThread'
+import { useUserMedia } from '@web/hooks/useUserMedia'
 
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useModal } from 'react-hooks-use-modal'
 
 import style from './index.module.scss'
 
 type ContainerProps = {
   className?: string
+  threadID: string
 }
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   setMyAvatar,
   myAvatar,
-  myStreamStatus,
-  onInitialConnect,
-  threadStatus,
+  isEnterButtonDisabled,
+  onEnter,
+  Modal,
+  openModal,
+  closeModal,
 }) => (
   <div className={`${className}`}>
-    <EmojiPicker onSelect={setMyAvatar} />
-    <button
-      disabled={
-        myStreamStatus !== 'ok' ||
-        !Boolean(myAvatar) ||
-        ['ok', 'pending'].includes(threadStatus)
-      }
-      onClick={onInitialConnect}
-    >
+    <button onClick={openModal}>{myAvatar}</button>
+    <Modal>
+      <EmojiPicker
+        onSelect={(emoji) => {
+          console.log(emoji)
+          setMyAvatar(emoji)
+          closeModal()
+        }}
+      />
+    </Modal>
+    <button onClick={onEnter} disabled={isEnterButtonDisabled}>
       initialConnect
     </button>
   </div>
 )
 
 const Container = (props: ContainerProps) => {
-  const router = useRouter()
-  const threadID = router.query.threadID as string
+  const { threadID } = props
+  const { enableLoading, disableLoading } = useLoadingScreen()
 
   //avatar
-  const setMyAvatar = useSetThreadState('myAvatar')
-  const myAvatar = useThreadStateValue('myAvatar')
+  const [myAvatar, setMyAvatar] = useState<string>('😀')
 
   //userMedia
-  const setMyStream = useSetUserMediaState('stream')
-  const myStream = useUserMediaStateValue('stream')
-  const setMyStreamStatus = useSetUserMediaState('status')
-  const myStreamStatus = useUserMediaStateValue('status')
-
-  useEffect(() => {
-    getUserMedia()
-      .then((stream) => {
-        setMyStream(stream)
-        setMyStreamStatus('ok')
-      })
-      .catch(() => setMyStreamStatus('error'))
-  }, [])
+  const { stream: myStream, status: myStreamStatus } = useUserMedia()
 
   //thread
-  const threadStatus = useThreadStateValue('status')
-  const initialConnect = useThreadStateValue('initialConnect')
-  const onInitialConnect = () => {
-    initialConnect({
-      threadID,
-      myStream,
-      myAvatar,
-    })
+  const { initialConnect, status: threadStatus } = useThread()
+
+  const isEnterButtonDisabled =
+    myStreamStatus !== 'ok' ||
+    !Boolean(myAvatar) ||
+    ['ok', 'pending'].includes(threadStatus)
+
+  const onEnter = async () => {
+    enableLoading()
+    myStream &&
+      myAvatar &&
+      (await initialConnect({ threadID, myStream, myAvatar }))
+    disableLoading()
   }
+
+  const [Modal, openModal, closeModal] = useModal('modal')
 
   const presenterProps = {
     setMyAvatar,
-    onInitialConnect,
-    myStreamStatus,
     myAvatar,
-    threadStatus,
+    isEnterButtonDisabled,
+    onEnter,
+    Modal,
+    closeModal,
+    openModal,
   }
   return { ...props, ...presenterProps }
 }

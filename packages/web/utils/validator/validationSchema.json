@@ -1,0 +1,193 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "BodyParams": {
+            "properties": {
+                "capacity": {
+                    "type": "number"
+                },
+                "category": {
+                    "$ref": "#/definitions/RTDB.ThreadCategoryUnion"
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "capacity",
+                "category",
+                "title"
+            ],
+            "type": "object"
+        },
+        "RTDB.ThreadCategories": {
+            "properties": {
+                "language": {
+                    "default": [
+                        "japanese"
+                    ],
+                    "items": [
+                        {
+                            "enum": [
+                                "japanese"
+                            ],
+                            "type": "string"
+                        }
+                    ],
+                    "maxItems": 1,
+                    "minItems": 1,
+                    "type": "array"
+                },
+                "sports": {
+                    "default": [
+                        "basketball",
+                        "football",
+                        "baseball"
+                    ],
+                    "items": [
+                        {
+                            "enum": [
+                                "basketball"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "enum": [
+                                "football"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "enum": [
+                                "baseball"
+                            ],
+                            "type": "string"
+                        }
+                    ],
+                    "maxItems": 3,
+                    "minItems": 3,
+                    "type": "array"
+                }
+            },
+            "required": [
+                "language",
+                "sports"
+            ],
+            "type": "object"
+        },
+        "RTDB.ThreadCategoryUnion": {
+            "enum": [
+                "baseball",
+                "basketball",
+                "football",
+                "japanese"
+            ],
+            "type": "string"
+        },
+        "RTDB.Tree": {
+            "properties": {
+                "signaling": {
+                    "additionalProperties": {
+                        "additionalProperties": {
+                            "properties": {
+                                "sdp": {
+                                    "type": "string"
+                                },
+                                "timestamp": {
+                                    "type": "number"
+                                },
+                                "type": {
+                                    "enum": [
+                                        "answer",
+                                        "offer"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "sdp",
+                                "timestamp",
+                                "type"
+                            ],
+                            "type": "object"
+                        },
+                        "type": "object"
+                    },
+                    "type": "object"
+                },
+                "threadInfo": {
+                    "additionalProperties": {
+                        "properties": {
+                            "capacity": {
+                                "type": "number"
+                            },
+                            "category": {
+                                "$ref": "#/definitions/RTDB.ThreadCategoryUnion"
+                            },
+                            "timestamp": {
+                                "type": "number"
+                            },
+                            "title": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "capacity",
+                            "category",
+                            "timestamp",
+                            "title"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "object"
+                },
+                "threads": {
+                    "additionalProperties": {
+                        "properties": {
+                            "timestamp": {
+                                "type": "number"
+                            },
+                            "users": {
+                                "additionalProperties": {
+                                    "properties": {
+                                        "avatar": {
+                                            "type": "string"
+                                        },
+                                        "timestamp": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "avatar",
+                                        "timestamp"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "timestamp",
+                            "users"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "object"
+                }
+            },
+            "required": [
+                "signaling",
+                "threadInfo",
+                "threads"
+            ],
+            "type": "object"
+        },
+        "RTDB.threadID": {
+            "type": "string"
+        },
+        "RTDB.userID": {
+            "type": "string"
+        }
+    }
+}
+

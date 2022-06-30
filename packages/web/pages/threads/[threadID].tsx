@@ -1,62 +1,48 @@
+import ThreadControl from '@web/components/ThreadControl'
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
 import ThreadUserList from '@web/components/ThreadUserList'
-import UserControl from '@web/components/UserControl'
-import { useThread } from '@web/hooks/useThread'
-import { useSetThreadState, useThreadStateValue } from '@web/state/thread'
+import { useGetThread } from '@web/hooks/useThread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
-  threadStatus,
-  myAvatar,
-  status,
+  threadID,
+  isEntered,
 }) => (
   <div>
-    <div>myavatar:{myAvatar}</div>
-    <div>status:{status}</div>
-    {['error', 'initial', 'pending'].includes(threadStatus) ? (
-      <ThreadEntranceScreen />
-    ) : (
+    {isEntered ? (
       <>
         <ThreadUserList />
-        <UserControl />
+        <ThreadControl />
       </>
+    ) : (
+      <ThreadEntranceScreen threadID={threadID} />
     )}
   </div>
 )
 
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
-  //thread
-  const {
-    status: threadStatus,
-    users: threadUsers,
-    initialConnect,
-  } = useThread()
-  const setStatus = useSetThreadState('status')
-  const setUsers = useSetThreadState('users')
-  const setInitialConnect = useSetThreadState('initialConnect')
-
-  useEffect(() => {
-    setStatus(threadStatus)
-    setUsers(threadUsers)
-    setInitialConnect(initialConnect)
-  }, [threadStatus, threadUsers, initialConnect])
-
-  const myAvatar = useThreadStateValue('myAvatar')
-  const status = useThreadStateValue('status')
+  const { status: threadStatus } = useGetThread()
+  const isEntered = threadStatus === 'ok'
 
   const presenterProps = {
-    myAvatar,
-    status,
-    threadStatus,
+    isEntered,
   }
   return { ...props, ...presenterProps }
 }
 
 export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+  const threadID = Array.isArray(params?.threadID)
+    ? params?.threadID[0]
+    : params?.threadID
+
+  if (!threadID) throw new Error('no threadID')
+
   return {
-    props: {},
+    props: {
+      threadID,
+    },
     revalidate: 60,
   }
 }

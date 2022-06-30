@@ -1,5 +1,5 @@
-import { toggleMute as _toggleMute } from '@web/modules/userMedia'
-import { useUserMediaStateValue } from '@web/state/userMedia'
+import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
+import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import React, { useEffect } from 'react'
 
@@ -13,24 +13,32 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   isMuted,
   toggleMute,
+  onExit,
 }) => (
   <div className={`${className}`}>
     Mute:<button onClick={toggleMute}>{isMuted ? 'off' : 'on'}</button>
+    <button onClick={onExit}>退室</button>
   </div>
 )
 
 const Container = (props: ContainerProps) => {
-  const isMuted = useUserMediaStateValue('isMuted')
-  const stream = useUserMediaStateValue('stream')
-  const toggleMute = stream ? () => _toggleMute(stream) : () => {}
+  const { isMuted, toggleMute } = useUserMedia()
+  const { enableLoading } = useLoadingScreen()
+
+  const onExit = async () => {
+    enableLoading()
+    !isMuted && toggleMute()
+    window.location.reload()
+  }
 
   const presenterProps = {
     isMuted,
     toggleMute,
+    onExit,
   }
   return { ...props, ...presenterProps }
 }
 
-export default function UserControl(props: ContainerProps) {
+export default function ThreadControl(props: ContainerProps) {
   return <Presenter {...Container(props)} />
 }

@@ -29,6 +29,7 @@ const Container = (props: ContainerProps) => {
     import('emoji-mart').then(({ Picker }) => {
       new Picker({
         ref: pickerRef,
+        theme: 'light',
         onEmojiSelect: (data) => {
           'native' in data && onSelect(data.native)
         },

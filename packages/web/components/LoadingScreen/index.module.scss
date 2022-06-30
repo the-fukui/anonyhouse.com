@@ -1,0 +1,73 @@
+.screen {
+  background: rgb(255 255 255 / 80%);
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  position: relative;
+}
+
+.smokes {
+  position: absolute;
+  left: 50%;
+  top: -45%;
+
+  .smoke {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 8px solid #9ca3af;
+    opacity: 0;
+  }
+
+  @for $i from 0 through 8 {
+    .smoke-#{$i} {
+      @if $i % 2 == 0 {
+        animation: smoke-l 8s #{-$i}s infinite;
+      }
+
+      @else {
+        animation: smoke-r 8s #{-$i}s infinite;
+      }
+    }
+  }
+
+  @keyframes smoke-l {
+    0% {
+      transform: scale(0.2) translate(-5px, 2px);
+    }
+
+    20% {
+      opacity: 1;
+      transform: scale(0.2) translate(-5px, -10px);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1) translate(30px, -25px);
+    }
+  }
+
+  @keyframes smoke-r {
+    0% {
+      transform: scale(0.2) translate(-5px, 2px);
+    }
+
+    20% {
+      opacity: 1;
+      transform: scale(0.2) translate(-5px, -4px);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1) translate(35px, -25px);
+    }
+  }
+}

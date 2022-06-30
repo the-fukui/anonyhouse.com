@@ -1,5 +1,7 @@
 import { usePeer } from '@web/hooks/usePeer'
+import { Thread, ThreadUser } from '@web/models/thread'
 import { ThreadRepository } from '@web/repository/thread'
+import { RecoilAtomKeys } from '@web/state/recoilKeys'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { atom, useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil'
@@ -7,29 +9,29 @@ import { SignalData } from 'simple-peer'
 
 type InitialConnectArguments = {
   threadID: string
-  myStream?: MediaStream
-  myAvatar?: string
+  myStream: MediaStream
+  myAvatar: string
 }
 
-type ThreadUser = {
-  ID: string
-  AudioRef?: HTMLAudioElement
-} & Awaited<ReturnType<ThreadRepository['getUsers']>>['{userID}']
+const state = atom<Thread>({
+  key: RecoilAtomKeys.THREAD,
+  default: {
+    ID: undefined,
+    status: 'initial',
+    myInfo: undefined,
+    users: [],
+  },
+})
 
-interface ThreadState {
-  status: 'initial' | 'pending' | 'ok' | 'error'
-  myID?: string
-  users: ThreadUser[]
+export const useGetThread = (): Thread => {
+  const thread = useRecoilValue(state)
+  return thread
 }
 
 export const useThread = () => {
-  const [state, setState] = useState<ThreadState>({
-    status: 'initial',
-    users: [],
-  })
-  const myID = useRef<string>('')
-  const initialUsers = useRef<ThreadUser[]>([])
+  const myID = useRef<string>()
   const { createPeer, setRemote } = usePeer()
+  const [thread, setThread] = useRecoilState(state)
 
   /**
    * スレッドの既存メンバーにオファーを出して接続（参加時）
@@ -46,21 +48,23 @@ export const useThread = () => {
     async ({ threadID, myStream, myAvatar }: InitialConnectArguments) => {
       const threadRepository = new ThreadRepository(threadID)
 
-      const _registerUser = async (myAvatar: string) => {
+      /**
+       * @todo private関数をpure functionにして、state反映はメインロジックに移す
+       */
+
+      const _registerUser = async () => {
         const userID = await threadRepository.registerUser(myAvatar)
-        setState((_state) => ({ ..._state, myID: userID }))
-        myID.current = userID
+        if (!userID) throw new Error("Couldn't get my ID")
+        return userID
       }
 
-      const _getUsers = async () => {
+      const _getInitialUsers = async () => {
         const users = await threadRepository.getUsers()
-
         const threadUsers = Object.entries(users).map(([userID, values]) => {
           return { ID: userID, ...values }
         })
 
-        //初回取得時のみinitialUserとして別途保持
-        initialUsers.current = threadUsers
+        return threadUsers
       }
 
       const _watchUsers = async () => {
@@ -73,12 +77,29 @@ export const useThread = () => {
             )
 
             //メンバーをリアルタイム反映
-            setState((_state) => ({ ..._state, users: threadUsers }))
+            setThread((_state) => ({ ..._state, users: threadUsers }))
           },
         })
       }
 
-      const _onStream = (stream: MediaStream, peerID: string) => {}
+      const _onStream = (stream: MediaStream, peerID: string) => {
+        //Audioを作成してStreamを再生
+        const audio = document.createElement('audio')
+        audio.srcObject = stream
+        audio.autoplay = true
+        audio.play()
+
+        //Audioをstateのusersに追加
+        setThread((_state) => ({
+          ..._state,
+          users: _state.users.map((user) => {
+            if (user.ID === peerID) {
+              return { ...user, AudioRef: audio }
+            }
+            return user
+          }),
+        }))
+      }
 
       const _onSignal = (data: SignalData, peerID: string) => {
         if (!myID.current) throw new Error("Couldn't get my ID")
@@ -129,24 +150,27 @@ export const useThread = () => {
         setRemote({ data: { sdp, type }, peerID: senderID })
       }
 
-      // main
-      setState((_state) => ({ ..._state, status: 'pending' }))
-      if (!myAvatar) {
-        setState((_state) => ({ ..._state, status: 'error' }))
-        throw new Error('Avatar is not set')
-      }
+      /**
+       * mainロジック
+       */
+      setThread((_state) => ({ ..._state, ID: threadID, status: 'pending' }))
 
       // 1.DBにユーザー登録
       // 2.ユーザーID取得
-      await _registerUser(myAvatar)
+      myID.current = await _registerUser()
+      setThread((_state) => ({
+        ..._state,
+        myInfo: { ID: myID.current || '', avatar: myAvatar },
+      }))
 
       // 3.スレッドメンバー取得（監視）
-      await _getUsers()
+      const initialUsers = await _getInitialUsers()
+      //初回取得時のみinitialUserとして別途保持
+
       // 4.スレッドメンバーwatch
       await _watchUsers()
 
       // 5.自分宛てのSDPをwatchしておく
-      if (!myID.current) throw new Error("Couldn't get my ID")
       threadRepository.onSDPReceived({
         myID: myID.current,
         callback: _signaling,
@@ -155,18 +179,18 @@ export const useThread = () => {
       // 6.メンバー分Peerを作成（自分以外）
       // 7.メンバー分シグナリング
       _initialSignaling({
-        targetIDs: initialUsers.current
+        targetIDs: initialUsers
           .filter((user) => user.ID !== myID.current)
           .map((user) => user.ID),
       })
 
-      setState((_state) => ({ ..._state, status: 'ok' }))
+      setThread((_state) => ({ ..._state, status: 'ok' }))
     },
-    [state],
+    [],
   )
 
   return {
     initialConnect,
-    ...state,
+    ...thread,
   }
 }

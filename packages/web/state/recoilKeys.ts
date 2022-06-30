@@ -5,6 +5,7 @@
 export enum RecoilAtomKeys {
   THREAD = 'Thread',
   USER_MEDIA = 'UserMedia',
+  LOADING_SCREEN = 'LoadingScreen',
 }
 
 export enum RecoilSelectorKeys {

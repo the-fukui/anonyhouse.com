@@ -2,10 +2,12 @@ namespace RTDB {
   type userID = string
   type threadID = string
 
+  type ThreadCategories = typeof import('../constants/thread').CATEGORIES
+
+  type ThreadCategoryUnion = ThreadCategories[keyof ThreadCategories][number]
   interface Tree {
     threads: {
       [key: threadID]: {
-        title: string
         timestamp: number
         users: {
           [key: userID]: {
@@ -13,6 +15,14 @@ namespace RTDB {
             timestamp: number
           }
         }
+      }
+    }
+    threadInfo: {
+      [key: threadID]: {
+        title: string
+        category: ThreadCategoryUnion
+        capacity: number
+        timestamp: number
       }
     }
     signaling: {
