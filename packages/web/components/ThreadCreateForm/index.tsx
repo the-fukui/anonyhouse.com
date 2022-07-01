@@ -1,3 +1,5 @@
+import { APIRouteRepository } from '@web/repository/apiRoute'
+
 import { TAG_GROUPS, TAG_ITEMS } from '@shared/constants/thread'
 
 import {
@@ -77,13 +79,7 @@ const Container = (props: ContainerProps) => {
 
   //作成リクエストを送信する
   const onSubmit = (values: typeof form.values) =>
-    fetch('/api/v1/thread', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
+    APIRouteRepository.createThread(values)
 
   const presenterProps = {
     form,
