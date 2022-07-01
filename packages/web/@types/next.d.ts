@@ -8,8 +8,8 @@ type PageContainerProps<
 type PresenterProps<T> = ReturnType<T>
 
 type _NextApiRequest = import('next').NextApiRequest
-type _NextApiResponse = import('next').NextApiResponse
-
+type _NextApiResponse<T> = import('next').NextApiResponse<T>
+type APIErrorMessage = { Error: { Message: string } }
 interface NextApiRequest<T extends NextApiRequest['query'], K extends Object>
   extends _NextApiRequest {
   query: T
@@ -17,10 +17,10 @@ interface NextApiRequest<T extends NextApiRequest['query'], K extends Object>
 }
 
 type NextApiHandler<
-  K extends _NextApiRequest['query'],
-  T extends Object,
-  P = any,
+  T extends _NextApiRequest['query'],
+  K extends Object,
+  P extends any,
 > = (
-  req: NextApiRequest<K, T>,
-  res: _NextApiResponse<P>,
+  req: NextApiRequest<T, K>,
+  res: _NextApiResponse<P | APIErrorMessage>,
 ) => void | Promise<void>

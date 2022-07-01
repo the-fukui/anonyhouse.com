@@ -1,5 +1,6 @@
+export const MAX_TITLE_LENGTH = 60
 export const MAX_CAPACITY = 20
-
+export const MAX_TAGS_LENGTH = 5
 export const TAG_ITEMS = [
   { slug: 'japanese', label: '日本語🇯🇵', group: 'language' },
   { slug: 'basketball', label: 'バスケットボール🏀', group: 'sports' },

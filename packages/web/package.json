@@ -17,6 +17,7 @@
     "@mantine/hooks": "^4.2.11",
     "@mantine/modals": "^4.2.11",
     "@mantine/next": "^4.2.11",
+    "@mantine/notifications": "^4.2.11",
     "ajv": "^8.11.0",
     "emoji-mart": "^5.1.0",
     "firebase": "^9.8.4",

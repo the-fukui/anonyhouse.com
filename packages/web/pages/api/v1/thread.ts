@@ -1,29 +1,40 @@
 import { ThreadRepository } from '@web/repository/api/thread'
 import { validate } from '@web/utils/validator/validator'
 
-import { MAX_CAPACITY } from '@shared/constants/thread'
+import {
+  MAX_CAPACITY,
+  MAX_TAGS_LENGTH,
+  MAX_TITLE_LENGTH,
+} from '@shared/constants/thread'
 
 import short from 'short-uuid'
 
 import { BodyParams } from './thread.validation'
 
-export interface Response {
-  id: string
+export type Response = {
+  ID: string
 }
 
-const handler: NextApiHandler<{}, BodyParams> = async (req, res) => {
+const handler: NextApiHandler<{}, BodyParams, Response> = async (req, res) => {
   res.setHeader('Allow', 'POST')
+  const { body } = req
 
   //不正なメソッド
   if (req.method !== 'POST')
-    return res.status(405).json({ Eror: { Message: '405 Method Not Allowed' } })
+    return res
+      .status(405)
+      .json({ Error: { Message: '405 Method Not Allowed' } })
 
   //パラメータ不足 or 不正
-  const { body } = req
   const { isValid } = validate(body, 'BodyParams')
   const isValidCapacity = body.capacity <= MAX_CAPACITY
-  if (!isValid || !isValidCapacity)
-    return res.status(400).json({ Eror: { Message: '400 Bad Request' } })
+  const isValidTitleLength =
+    body.title.length <= MAX_TITLE_LENGTH && body.title.length > 0
+  const isValidTagLength =
+    body.tags.length <= MAX_TAGS_LENGTH && body.tags.length > 0
+
+  if (!isValid || !isValidCapacity || !isValidTitleLength || !isValidTagLength)
+    return res.status(400).json({ Error: { Message: '400 Bad Request' } })
 
   //recaptcha検証
   // if (process.env.NODE_ENV === 'production') {
@@ -62,7 +73,7 @@ const handler: NextApiHandler<{}, BodyParams> = async (req, res) => {
       console.log(e)
       return res
         .status(500)
-        .json({ Eror: { Message: 'internal server error' } })
+        .json({ Error: { Message: 'internal server error' } })
     })
 }
 
