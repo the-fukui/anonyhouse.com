@@ -1,10 +1,15 @@
-type PageContainerProps<
-  T extends import('next').GetStaticProps | import('next').GetServerSideProps,
-> = T extends import('next').GetStaticProps
-  ? import('next').InferGetStaticPropsType<T>
-  : T extends import('next').GetServerSideProps
-  ? import('next').InferGetServerSidePropsType<T>
+type GetSSRResult<TProps> =
+  | { props: TProps }
+  | { redirect: any }
+  | { notFound: true }
+type GetSSRFn<TProps extends any> = (args: any) => Promise<GetSSRResult<TProps>>
+type inferSSRProps<TFn extends GetSSRFn<any>> = TFn extends GetSSRFn<
+  infer TProps
+>
+  ? NonNullable<TProps>
   : never
+
+type PageContainerProps<T> = inferSSRProps<T>
 type PresenterProps<T> = ReturnType<T>
 
 type _NextApiRequest = import('next').NextApiRequest

@@ -2,22 +2,26 @@ import ThreadControl from '@web/components/ThreadControl'
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
 import ThreadUserList from '@web/components/ThreadUserList'
 import { useGetThread } from '@web/hooks/useThread'
+import { ThreadRepository } from '@web/repository/server/thread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
-  threadID,
+  thread,
   isEntered,
 }) => (
   <div>
+    <h1>{thread.title}</h1>
+    <div>{JSON.stringify(thread.tags)}</div>
+    <div>定員:{thread.capacity}人</div>
     {isEntered ? (
       <>
         <ThreadUserList />
         <ThreadControl />
       </>
     ) : (
-      <ThreadEntranceScreen threadID={threadID} />
+      <ThreadEntranceScreen threadID={thread.ID} />
     )}
   </div>
 )
@@ -39,11 +43,20 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
 
   if (!threadID) throw new Error('no threadID')
 
-  return {
-    props: {
-      threadID,
-    },
-    revalidate: 60,
+  try {
+    const threadRepository = new ThreadRepository(threadID)
+    const threadInfo = await threadRepository.getThread()
+
+    return {
+      props: {
+        thread: { ID: threadID, ...threadInfo },
+      },
+      revalidate: 60,
+    }
+  } catch {
+    return {
+      notFound: true,
+    } as const
   }
 }
 

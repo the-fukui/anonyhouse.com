@@ -1,4 +1,4 @@
-import { ThreadRepository } from '@web/repository/api/thread'
+import { ThreadRepository } from '@web/repository/server/thread'
 import { validate } from '@web/utils/validator/validator'
 
 import {
@@ -62,15 +62,12 @@ const handler: NextApiHandler<{}, BodyParams, Response> = async (req, res) => {
 
   //RTDBへ書き込み
   const ID = short.generate()
-  const threadRepository = new ThreadRepository()
 
-  return threadRepository
-    .createThread({ data: body, ID })
+  return ThreadRepository.createThread({ data: body, ID })
     .then(() => {
       return res.status(201).json({ ID })
     })
-    .catch((e) => {
-      console.log(e)
+    .catch(() => {
       return res
         .status(500)
         .json({ Error: { Message: 'internal server error' } })
