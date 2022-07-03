@@ -1,5 +1,10 @@
 {
   "rules": {
+    "threadInfo": {
+      ".indexOn": [
+        "capacity"
+      ]
+    },
     ".read": true,
     ".write": true
   }

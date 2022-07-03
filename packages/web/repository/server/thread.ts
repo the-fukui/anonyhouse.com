@@ -42,4 +42,15 @@ export class ThreadRepository {
       path: `/threadInfo/${this._threadID}`,
     })
   }
+
+  /**
+   * スレッドの一覧を取得
+   */
+  public static getThreadList() {
+    return Firebase.instance.database.list<
+      RTDB.Tree['threadInfo']['{threadID}']
+    >({
+      path: `/threadInfo/`,
+    })
+  }
 }
