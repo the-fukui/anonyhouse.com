@@ -958,10 +958,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-4.2.11.tgz#936d3fdf4eff33620d90902b4091b219aaee7669"
   integrity sha512-kwbMbpT8ErroVSLK7fxEN0SypvK0rEErYyHKfKSMah5buWSu2F/diIuafL5UjvN7aQfS0ZJnqnH/avUN25H3qg==
 
-"@mantine/modals@^4.2.11":
-  version "4.2.11"
-  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-4.2.11.tgz#c4c52eeebf2aee75eb66b8104dc1c8c367e38182"
-  integrity sha512-2F+bnrBzq8733HXUXI71fyzQhWiPHngr/ts0J8SXY1fI7ndMacUj058jDZl/zbt7J8uqUy9/bnypd0v3TKYsvg==
+"@mantine/modals@^4.2.12":
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-4.2.12.tgz#591ec0c3034ec0c3de312bec256797b574e1b9e0"
+  integrity sha512-UEcz2kZIt5fQELTuV0YKtqNzNVs+lyP8aqoNJAUgl3u4EKg4YS0WTTqCOJ6ACtAdmCc10lemgQ3zV/HnNh15Ng==
 
 "@mantine/next@^4.2.11":
   version "4.2.11"
