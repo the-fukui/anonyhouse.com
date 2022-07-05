@@ -12,7 +12,7 @@
     "generateValidationSchema": "typescript-json-schema ./tsconfig.json '*' --include ./{pages,components}/**/*.validation.ts --include ../shared/@types/realtimeDatabase.d.ts --include ../shared/constants/**/*.ts --ignoreErrors --required -o ./utils/validator/validationSchema.json"
   },
   "dependencies": {
-    "@mantine/core": "^4.2.11",
+    "@mantine/core": "^4.2.12",
     "@mantine/form": "^4.2.12",
     "@mantine/hooks": "^4.2.12",
     "@mantine/modals": "^4.2.12",
