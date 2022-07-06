@@ -5,6 +5,7 @@ namespace RTDB {
   type ThreadTags = typeof import('../constants/thread').TAG_ITEMS
 
   type ThreadTagUnion = ThreadTags[number]['slug']
+  //TODO: threadとthreadInfoを一緒にする
   interface Tree {
     threads: {
       [key: threadID]: {
