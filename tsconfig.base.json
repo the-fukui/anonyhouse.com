@@ -5,7 +5,8 @@
     "baseUrl": "./",
     "paths": {
       "@web/*": ["./packages/web/*"],
-      "@shared/*": ["./packages/shared/*"]
+      "@shared/*": ["./packages/shared/*"],
+      "@backend/*": ["./packages/backend/*"]
     },
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],

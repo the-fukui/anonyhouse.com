@@ -5,6 +5,7 @@ module.exports = {
   importOrder: [
     '^@web/(.*)$',
     '^@shared/(.*)$',
+    '^@backend/(.*)$',
     '<THIRD_PARTY_MODULES>',
     '^[./]',
   ],
