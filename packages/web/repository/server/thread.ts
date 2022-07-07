@@ -1,4 +1,4 @@
-import { Firebase } from '@web/infrastructure/server/firebase'
+import { Backend } from '@web/infrastructure/backend'
 
 type CreateThreadData = {
   title: string
@@ -7,50 +7,26 @@ type CreateThreadData = {
 }
 
 export class ThreadRepository {
-  private _threadID: string
-
-  constructor(threadID: string) {
-    this._threadID = threadID
-  }
+  constructor() {}
 
   /**
    * Threadを新規作成
    */
-  public static createThread({
-    data,
-    ID,
-  }: {
-    data: CreateThreadData
-    ID: string
-  }) {
-    return Firebase.instance.database.set<
-      RTDB.Tree['threadInfo']['{ThreadID}']
-    >({
-      path: `/threadInfo/${ID}`,
-      data,
-      addTimestamp: true,
-    })
+  public static createThread({ data }: { data: CreateThreadData }) {
+    return Backend.createThread(data)
   }
 
   /**
    * スレッドの情報を取得
    */
-  public getThread() {
-    return Firebase.instance.database.get<
-      RTDB.Tree['threadInfo']['{threadID}']
-    >({
-      path: `/threadInfo/${this._threadID}`,
-    })
+  public static getThread(ID: string) {
+    return Backend.getThread(ID)
   }
 
   /**
    * スレッドの一覧を取得
    */
   public static getThreadList() {
-    return Firebase.instance.database.list<
-      RTDB.Tree['threadInfo']['{threadID}']
-    >({
-      path: `/threadInfo/`,
-    })
+    return Backend.getThreads()
   }
 }

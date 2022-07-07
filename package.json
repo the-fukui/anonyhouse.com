@@ -13,7 +13,9 @@
   "scripts": {
     "preinstall": "sh env.sh",
     "env": "sh env.sh",
+    "dev": "yarn emulator & yarn backend & yarn web",
     "emulator": "yarn workspace firebase emulator",
+    "backend": "yarn workspace backend dev",
     "generate:env-type": "gen-env-types -o packages/shared/@types/env.d.ts .env",
     "web": "yarn workspace web dev",
     "web:build": "yarn workspace web build",

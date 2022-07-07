@@ -2,7 +2,7 @@ import { CreateThreadDto } from '@backend/src/dto/thread/thread.dto'
 import { ThreadModel } from '@backend/src/entity/thread/thread.model'
 import { ThreadUsecase } from '@backend/src/usecase/thread/thread.service'
 
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 
 @Controller('threads')
 export class ThreadsController {
@@ -11,6 +11,11 @@ export class ThreadsController {
   @Get('/')
   async findAll(): Promise<ThreadModel[]> {
     return this.threadUsecase.findAll()
+  }
+
+  @Get(':id')
+  async get(@Param() params): Promise<ThreadModel> {
+    return this.threadUsecase.get(params.id)
   }
 
   @Post('/')

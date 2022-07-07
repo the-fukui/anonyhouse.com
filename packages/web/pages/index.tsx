@@ -10,9 +10,9 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({ threads }) => (
       {threads.map((thread) => (
         <li key={thread.ID}>
           <Link href={`/threads/${thread.ID}/`}>
-            <div>
+            <a>
               {thread.title},{thread.capacity}
-            </div>
+            </a>
           </Link>
         </li>
       ))}

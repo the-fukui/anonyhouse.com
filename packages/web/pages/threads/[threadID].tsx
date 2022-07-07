@@ -44,12 +44,13 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
   if (!threadID) throw new Error('no threadID')
 
   try {
-    const threadRepository = new ThreadRepository(threadID)
-    const threadInfo = await threadRepository.getThread()
+    const threadInfo = await ThreadRepository.getThread(threadID)
+
+    console.log({ threadInfo })
 
     return {
       props: {
-        thread: { ID: threadID, ...threadInfo },
+        thread: { ...threadInfo },
       },
       revalidate: 60,
     }
