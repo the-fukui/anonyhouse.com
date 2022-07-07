@@ -1,7 +1,5 @@
-import {
-  CreateThreadData,
-  ThreadRepository,
-} from '@backend/src/repository/thread/thread.service'
+import { CreateThreadDto } from '@backend/src/dto/thread/thread.dto'
+import { ThreadRepository } from '@backend/src/repository/thread/thread.service'
 
 import { Injectable } from '@nestjs/common'
 
@@ -9,8 +7,8 @@ import { Injectable } from '@nestjs/common'
 export class ThreadUsecase {
   constructor(private threadRepository: ThreadRepository) {}
 
-  create({ data, ID }: { data: CreateThreadData; ID: string }) {
-    return this.threadRepository.create({ data, ID })
+  create({ data }: { data: CreateThreadDto }) {
+    return this.threadRepository.create({ data })
   }
 
   get(threadID: string) {

@@ -25,7 +25,11 @@ export class DatabaseCRUD {
     console.log('[get]', { path })
     const dbRef = this._database.ref(path)
     return dbRef.get().then((snapshot) => {
-      if (snapshot.exists()) return snapshot.val() as T
+      if (snapshot.exists())
+        return {
+          ID: snapshot.key,
+          ...snapshot.val(),
+        } as T & { ID: string }
       throw new Error('No data available')
     })
   }
@@ -92,14 +96,14 @@ export class DatabaseCRUD {
     data,
     addTimestamp = false,
   }: {
-    path: string
+    path: string //IDまで含む
     data: Omit<T, 'timestamp'>
     addTimestamp?: boolean
   }) {
     console.log('[set]', { path, data })
     const dbRef = this._database.ref(path)
     if (addTimestamp) data = { ...data, timestamp: serverTimestamp() }
-    return dbRef.set(data)
+    return dbRef.set(data).then(() => this.get({ path }))
   }
 
   public push<T>({
@@ -114,6 +118,15 @@ export class DatabaseCRUD {
     console.log('[push]', { path, data })
     const dbRef = this._database.ref(path)
     if (addTimestamp) data = { ...data, timestamp: serverTimestamp() }
-    return dbRef.push(data).then((ref) => ref.key)
+    return dbRef.push(data).then((ref) =>
+      ref.get().then((snapshot) => {
+        if (snapshot.exists())
+          return {
+            ID: snapshot.key,
+            ...snapshot.val(),
+          } as T & { ID: string }
+        throw new Error('No data available')
+      }),
+    )
   }
 }

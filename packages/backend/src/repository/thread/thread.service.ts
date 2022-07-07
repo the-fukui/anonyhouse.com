@@ -1,12 +1,7 @@
+import { CreateThreadDto } from '@backend/src/dto/thread/thread.dto'
 import { Firebase } from '@backend/src/infrastructure/firebase/firebase.service'
 
 import { Injectable } from '@nestjs/common'
-
-export type CreateThreadData = {
-  title: string
-  tags: RTDB.ThreadTagUnion[]
-  capacity: number
-}
 
 @Injectable()
 export class ThreadRepository {
@@ -15,9 +10,9 @@ export class ThreadRepository {
   /**
    * Threadを新規作成
    */
-  create({ data, ID }: { data: CreateThreadData; ID: string }) {
-    return this.firebase.database.set<RTDB.Tree['threadInfo']['{ThreadID}']>({
-      path: `/threadInfo/${ID}`,
+  create({ data }: { data: CreateThreadDto }) {
+    return this.firebase.database.push<RTDB.Tree['threadInfo']['{ThreadID}']>({
+      path: `/threadInfo/`,
       data,
       addTimestamp: true,
     })

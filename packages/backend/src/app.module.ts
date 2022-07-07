@@ -1,4 +1,4 @@
-import { ThreadsModule } from '@backend/src/controller/threads/threads.module'
+import { ThreadsModule } from '@backend/src/controller/thread/thread.module'
 
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
