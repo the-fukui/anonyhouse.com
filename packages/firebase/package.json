@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "firebase-tools": "^11.2.0"
+    "firebase-tools": "^11.2.1"
   },
   "scripts": {
     "emulator": "firebase emulators:start --import=./data --export-on-exit --project=default"
