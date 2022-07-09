@@ -1,5 +1,5 @@
 ---
-name: 'state'
+name: '[@web] state'
 root: '.'
 output: '.'
 ignore: []
@@ -7,7 +7,7 @@ questions:
   name: 'Please enter state name.'
 ---
 
-# `state/{{ inputs.name | camel }}.ts`
+# `packages/web/state/{{ inputs.name | camel }}.ts`
 
 ```ts
 import { RecoilAtomKeys, RecoilSelectorKeys } from '@web/state/recoilKeys'
