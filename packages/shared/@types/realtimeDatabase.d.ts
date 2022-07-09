@@ -10,19 +10,16 @@ namespace RTDB {
     threads: {
       [key: threadID]: {
         timestamp: number
-        users: {
-          [key: userID]: {
-            avatar: string
-            timestamp: number
-          }
-        }
-      }
-    }
-    threadInfo: {
-      [key: threadID]: {
         title: string
         tags: ThreadTagUnion[]
         capacity: number
+        users: userID[]
+      }
+    }
+    users: {
+      [key: userID]: {
+        avatar: string
+        thread: threadID
         timestamp: number
       }
     }
