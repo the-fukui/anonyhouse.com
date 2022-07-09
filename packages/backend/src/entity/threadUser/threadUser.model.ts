@@ -1,5 +1,6 @@
 export class ThreadUserModel {
-  id: string
+  ID: string
   avatar: string
+  thread: string
   timestamp: number
 }

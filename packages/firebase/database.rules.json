@@ -1,8 +1,13 @@
 {
   "rules": {
-    "threadInfo": {
+    "threads": {
       ".indexOn": [
         "capacity"
+      ]
+    },
+    "users": {
+      ".indexOn": [
+        "thread"
       ]
     },
     ".read": true,

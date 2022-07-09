@@ -5,6 +5,9 @@ import {
   TAG_ITEMS,
 } from '@shared/constants/thread'
 
+import { ThreadModel } from '@backend/src/entity/thread/thread.model'
+import { ThreadUserModel } from '@backend/src/entity/threadUser/threadUser.model'
+
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -40,3 +43,31 @@ export class CreateThreadDto {
   @Min(1)
   capacity: number
 }
+
+export class GetThreadDto {
+  ID: string
+  title: string
+  tags: RTDB.ThreadTagUnion[]
+  capacity: number
+  user: {
+    avatar: string
+  }[]
+  timestamp: number
+
+  static fromEntity(
+    threadEntity: ThreadModel,
+    threadUserEntities: ThreadUserModel[],
+  ) {
+    const Dto = new GetThreadDto()
+    Dto.ID = threadEntity.ID
+    Dto.title = threadEntity.title
+    Dto.tags = threadEntity.tags
+    Dto.capacity = threadEntity.capacity
+    Dto.timestamp = threadEntity.timestamp
+    Dto.user = threadUserEntities.map((user) => ({ avatar: user.avatar }))
+
+    return Dto
+  }
+}
+
+export class PostThreadDto extends GetThreadDto {}

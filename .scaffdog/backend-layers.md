@@ -12,7 +12,7 @@ questions:
 # `packages/backend/src/entity/{{ inputs.name | camel }}/{{ inputs.name | camel }}.model.ts`
 
 ```ts
-export class {{ inputs.name | pascal }}{}
+export class {{ inputs.name | pascal }}Model {}
 
 ```
 

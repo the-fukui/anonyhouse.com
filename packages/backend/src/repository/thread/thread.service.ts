@@ -1,4 +1,6 @@
 import { CreateThreadDto } from '@backend/src/dto/thread/thread.dto'
+import { ThreadModel } from '@backend/src/entity/thread/thread.model'
+import { ThreadUserModel } from '@backend/src/entity/threadUser/threadUser.model'
 import { Firebase } from '@backend/src/infrastructure/firebase/firebase.service'
 
 import { Injectable } from '@nestjs/common'
