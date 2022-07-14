@@ -2,7 +2,7 @@ import ThreadControl from '@web/components/ThreadControl'
 import ThreadEntranceScreen from '@web/components/ThreadEntranceScreen'
 import ThreadUserList from '@web/components/ThreadUserList'
 import { useGetThread } from '@web/hooks/useThread'
-import { ThreadRepository } from '@web/repository/server/thread'
+import { ThreadRepository } from '@web/repository/thread'
 
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'

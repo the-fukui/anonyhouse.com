@@ -3,6 +3,5 @@ export class ThreadModel {
   title: string
   tags: RTDB.ThreadTagUnion[]
   capacity: number
-  users: string[]
   timestamp: number
 }

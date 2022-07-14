@@ -1,5 +1,5 @@
 import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
-import { APIRouteRepository } from '@web/repository/apiRoute'
+import { ThreadRepository } from '@web/repository/thread'
 import { notify } from '@web/utils/notification'
 
 import {
@@ -101,7 +101,7 @@ const Container = (props: ContainerProps) => {
   const onSubmit = (values: typeof form.values) => {
     setCanSubmit(false)
     enableLoading('作成中...')
-    APIRouteRepository.createThread(values)
+    ThreadRepository.createThread({ data: values })
       .then(async ({ ID }) => {
         //スレッドページへ移動
         router.push(`/threads/${ID}/`).then(disableLoading)

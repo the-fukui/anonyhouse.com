@@ -1,4 +1,4 @@
-import { ThreadRepository } from '@web/repository/server/thread'
+import { ThreadRepository } from '@web/repository/thread'
 
 import type { GetStaticPropsContext } from 'next'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({ threads }) => (
         <li key={thread.ID}>
           <Link href={`/threads/${thread.ID}/`}>
             <a>
-              {thread.title},{thread.capacity}
+              {thread.title},{thread.capacity},{JSON.stringify(thread.users)}
             </a>
           </Link>
         </li>
@@ -29,9 +29,7 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
 
 export const getStaticProps = async ({}: GetStaticPropsContext) => {
   try {
-    const threads = await ThreadRepository.getThreadList().catch((e) =>
-      console.log(e),
-    )
+    const threads = await ThreadRepository.getThreadList()
 
     return {
       props: {
