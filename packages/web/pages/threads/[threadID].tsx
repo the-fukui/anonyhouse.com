@@ -46,8 +46,6 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
   try {
     const threadInfo = await ThreadRepository.getThread(threadID)
 
-    console.log({ threadInfo })
-
     return {
       props: {
         thread: { ...threadInfo },

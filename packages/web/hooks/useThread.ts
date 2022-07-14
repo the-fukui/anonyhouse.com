@@ -59,26 +59,14 @@ export const useThread = () => {
       }
 
       const _getInitialUsers = async () => {
-        const users = await threadRepository.getUsers()
-        const threadUsers = Object.entries(users).map(([userID, values]) => {
-          return { ID: userID, ...values }
-        })
-
+        const threadUsers = await threadRepository.getUsers()
         return threadUsers
       }
 
       const _watchUsers = async () => {
-        await threadRepository.watchUsers({
-          callback: ({ value: users }) => {
-            const threadUsers = Object.entries(users).map(
-              ([userID, values]) => {
-                return { ID: userID, ...values }
-              },
-            )
-
-            //メンバーをリアルタイム反映
-            setThread((_state) => ({ ..._state, users: threadUsers }))
-          },
+        await threadRepository.watchUsers(({ value: users }) => {
+          //メンバーをリアルタイム反映
+          setThread((_state) => ({ ..._state, users: users }))
         })
       }
 

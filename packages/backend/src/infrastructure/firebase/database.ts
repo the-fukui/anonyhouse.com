@@ -45,7 +45,7 @@ export class DatabaseCRUD {
     console.log('[list]', { path, limit, page, order, orderBy, where })
     const dbRef = this._database.ref(path)
 
-    //TODO: pageクエリ（cursor）
+    //TODO: pageクエリ（cursor）/ order
 
     //クエリ
     let query = dbRef.limitToLast(limit)

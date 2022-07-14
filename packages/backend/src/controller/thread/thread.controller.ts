@@ -7,7 +7,7 @@ import { ThreadUserUsecase } from '@backend/src/usecase/threadUser/threadUser.se
 
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 
-@Controller('threads')
+@Controller('/v1/threads')
 export class ThreadsController {
   constructor(
     private threadUsecase: ThreadUsecase,

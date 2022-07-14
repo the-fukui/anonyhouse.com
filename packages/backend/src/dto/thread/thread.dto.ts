@@ -49,7 +49,7 @@ export class GetThreadDto {
   title: string
   tags: RTDB.ThreadTagUnion[]
   capacity: number
-  user: {
+  users: {
     avatar: string
   }[]
   timestamp: number
@@ -64,7 +64,7 @@ export class GetThreadDto {
     Dto.tags = threadEntity.tags
     Dto.capacity = threadEntity.capacity
     Dto.timestamp = threadEntity.timestamp
-    Dto.user = threadUserEntities.map((user) => ({ avatar: user.avatar }))
+    Dto.users = threadUserEntities.map((user) => ({ avatar: user.avatar }))
 
     return Dto
   }

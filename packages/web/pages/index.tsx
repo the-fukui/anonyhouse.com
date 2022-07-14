@@ -29,7 +29,9 @@ const Container = (props: PageContainerProps<typeof getStaticProps>) => {
 
 export const getStaticProps = async ({}: GetStaticPropsContext) => {
   try {
-    const threads = await ThreadRepository.getThreadList()
+    const threads = await ThreadRepository.getThreadList().catch((e) =>
+      console.log(e),
+    )
 
     return {
       props: {
