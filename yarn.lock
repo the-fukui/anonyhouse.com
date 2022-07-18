@@ -1619,10 +1619,10 @@
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/platform-express@^9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.0.3.tgz#d58216dede1a09eec6898e3444191206a7248816"
-  integrity sha512-GNdfpyuv3fZwICNxB50PMXFIk2VjV4Z26lqWUBF5/6Th+fH68gy1HSVpu4CRjbsUuufrskkdI8fF8j4XrK2yzA==
+"@nestjs/platform-express@^9.0.4":
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.0.4.tgz#7327322afb16d95b1cab4779d1a9c9fc98361232"
+  integrity sha512-jUru88otFCI1fOBbPescMJuULvHlg/YbNQkXPYUenGV9iN/isohXYepXqFEZDkbH64LnZo8jjUT87D0cMweTdg==
   dependencies:
     body-parser "1.20.0"
     cors "2.8.5"
