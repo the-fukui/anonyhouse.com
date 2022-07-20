@@ -10,6 +10,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
+      - "dependencies"
       - "root"
 
   - package-ecosystem: "npm" # See documentation for possible values
@@ -17,6 +18,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
+      - "dependencies"
       - "web"
 
   - package-ecosystem: "npm" # See documentation for possible values
@@ -24,6 +26,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
+      - "dependencies"
       - "backend"
 
   - package-ecosystem: "npm" # See documentation for possible values
@@ -31,4 +34,5 @@ updates:
     schedule:
       interval: "daily"
     labels:
+      - "dependencies"
       - "firebase"
