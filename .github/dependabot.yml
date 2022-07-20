@@ -9,3 +9,26 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    labels:
+      - "root"
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/packages/web" # Location of package manifests
+    schedule:
+      interval: "daily"
+    labels:
+      - "web"
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/packages/backend" # Location of package manifests
+    schedule:
+      interval: "daily"
+    labels:
+      - "backend"
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/packages/firebase" # Location of package manifests
+    schedule:
+      interval: "daily"
+    labels:
+      - "firebase"
