@@ -3,8 +3,6 @@ import { useUserMedia } from '@web/hooks/useUserMedia'
 
 import React, { useEffect } from 'react'
 
-import style from './index.module.scss'
-
 type ContainerProps = {
   className?: string
 }

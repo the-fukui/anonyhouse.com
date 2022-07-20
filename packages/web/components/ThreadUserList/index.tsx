@@ -1,9 +1,6 @@
 import { useGetThread } from '@web/hooks/useThread'
-import { useThreadStateValue } from '@web/state/thread'
 
 import React from 'react'
-
-import style from './index.module.scss'
 
 type ContainerProps = {
   className?: string

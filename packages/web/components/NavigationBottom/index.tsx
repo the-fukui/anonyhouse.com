@@ -3,8 +3,6 @@ import Link from 'next/link'
 import React from 'react'
 import { FaListUl, FaPlus, FaThLarge, FaTools } from 'react-icons/fa'
 
-import style from './index.module.scss'
-
 type ContainerProps = {
   className?: string
 }

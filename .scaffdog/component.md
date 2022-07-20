@@ -11,7 +11,6 @@ questions:
 
 ```tsx
 import React from 'react'
-import style from './index.module.scss'
 
 type ContainerProps = {
     className?: string
@@ -33,8 +32,9 @@ export default function {{ inputs.name | pascal }}(props: ContainerProps) {
 }
 ```
 
+<!--
 # `packages/web/components/{{ inputs.name | pascal }}/index.scss`
 
 ```scss
 
-```
+``` -->

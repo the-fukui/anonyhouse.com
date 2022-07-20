@@ -1,8 +1,6 @@
 import type { PickerProps as OldPickerProps } from 'emoji-mart'
 import React, { useEffect, useRef } from 'react'
 
-import style from './index.module.scss'
-
 type ContainerProps = {
   className?: string
   onSelect: (emoji: string) => void

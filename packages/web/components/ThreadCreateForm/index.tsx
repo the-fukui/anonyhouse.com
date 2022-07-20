@@ -20,8 +20,6 @@ import { useForm } from '@mantine/form'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
-import style from './index.module.scss'
-
 type ContainerProps = {
   className?: string
 }

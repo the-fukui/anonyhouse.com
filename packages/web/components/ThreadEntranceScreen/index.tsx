@@ -6,8 +6,6 @@ import { useUserMedia } from '@web/hooks/useUserMedia'
 import { useModals } from '@mantine/modals'
 import React, { useEffect, useRef, useState } from 'react'
 
-import style from './index.module.scss'
-
 type ContainerProps = {
   className?: string
   threadID: string
@@ -45,7 +43,7 @@ const Container = (props: ContainerProps) => {
   //入室ボタン活性判定
   const isEnterButtonDisabled =
     myStreamStatus !== 'ok' ||
-    !Boolean(myAvatar) ||
+    !myAvatar ||
     ['ok', 'pending'].includes(threadStatus)
 
   //入室時
