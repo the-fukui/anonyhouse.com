@@ -23,6 +23,7 @@
     "next-react-svg": "^1.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
     "recoil": "^0.7.4",
     "simple-peer": "^9.11.1"
   },
