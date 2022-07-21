@@ -1,3 +1,4 @@
+import ThreadList from '@web/components/ThreadList'
 import { ThreadRepository } from '@web/repository/thread'
 
 import type { GetStaticPropsContext } from 'next'
@@ -6,17 +7,7 @@ import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({ threads }) => (
   <div>
-    <ul>
-      {threads.map((thread) => (
-        <li key={thread.ID}>
-          <Link href={`/threads/${thread.ID}/`}>
-            <a>
-              {thread.title},{thread.capacity},{JSON.stringify(thread.users)}
-            </a>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <ThreadList threads={threads} />
   </div>
 )
 
