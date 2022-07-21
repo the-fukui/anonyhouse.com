@@ -1,7 +1,7 @@
 import LoadingScreen from '@web/components/LoadingScreen'
 import NavigationBottom from '@web/components/NavigationBottom'
 
-import { MantineProvider } from '@mantine/core'
+import { Affix, MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
 import { NotificationsProvider } from '@mantine/notifications'
 import type { AppProps } from 'next/app'
@@ -22,8 +22,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           <NotificationsProvider>
             <RecoilRoot>
               <Component {...pageProps} />
-              <NavigationBottom />
-              <div id="modal"></div>
+              <Affix
+                position={{ bottom: 0, left: 0 }}
+                sx={() => ({ width: '100%' })}
+              >
+                <NavigationBottom />
+              </Affix>
               <LoadingScreen />
             </RecoilRoot>
           </NotificationsProvider>

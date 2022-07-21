@@ -1,5 +1,6 @@
-import { Box, Grid } from '@mantine/core'
+import { Box, Grid, Stack, Text } from '@mantine/core'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { FaListUl, FaPlus, FaThLarge, FaTools } from 'react-icons/fa'
 
@@ -16,15 +17,35 @@ const NAVIGATIONS = [
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
+  currentItemName,
 }) => (
   <nav className={`${className}`}>
     <Grid>
       {NAVIGATIONS.map((navigation) => (
-        <Grid.Col span={12 / NAVIGATIONS.length} key={navigation.href}>
+        <Grid.Col
+          span={12 / NAVIGATIONS.length}
+          key={navigation.href}
+          sx={(theme) => ({
+            cursor: 'pointer',
+            backgroundColor:
+              navigation.name === currentItemName
+                ? theme.colors.gray?.[2]
+                : undefined,
+            transition: 'background-color 0.2s ease-in-out',
+            ':hover':
+              navigation.name === currentItemName
+                ? {}
+                : {
+                    backgroundColor: theme.colors.gray?.[3],
+                  },
+          })}
+        >
           <Link href={navigation.href}>
-            <Box sx={() => ({ cursor: 'pointer' })} component="a">
-              <navigation.icon size={24} />
-              {navigation.name}
+            <Box component="a">
+              <Stack spacing={0} align={'center'}>
+                <navigation.icon size={24} />
+                <Text size="xs">{navigation.name}</Text>
+              </Stack>
             </Box>
           </Link>
         </Grid.Col>
@@ -34,9 +55,19 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 )
 
 const Container = (props: ContainerProps) => {
-  /** Logic here */
+  const { asPath } = useRouter()
 
-  const presenterProps = {}
+  /**
+   * 現在のパスからどのナビゲーションを選択しているかを判定する
+   * 始まりが一致する -> 一番文字列が長いもの で絞り込み
+   */
+  const currentItemName = NAVIGATIONS.filter((navigation) =>
+    asPath.startsWith(navigation.href),
+  ).reduce((a, b) => (a.href?.length > b.href?.length ? a : b)).name
+
+  const presenterProps = {
+    currentItemName,
+  }
   return { ...props, ...presenterProps }
 }
 
