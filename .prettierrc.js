@@ -6,6 +6,7 @@ module.exports = {
     '^@web/(.*)$',
     '^@shared/(.*)$',
     '^@backend/(.*)$',
+    '^@mantine/(.*)$',
     '<THIRD_PARTY_MODULES>',
     '^[./]',
   ],

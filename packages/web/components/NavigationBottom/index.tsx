@@ -1,4 +1,5 @@
 import { Box, Grid, Stack, Text, createStyles } from '@mantine/core'
+
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -21,8 +22,8 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   classes,
   cx,
 }) => (
-  <nav className={`${className}`}>
-    <Grid>
+  <Box className={`${className} ${classes.wrapper}`} component="nav">
+    <Grid m={0}>
       {NAVIGATIONS.map((navigation) => (
         <Grid.Col
           span={12 / NAVIGATIONS.length}
@@ -43,7 +44,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
         </Grid.Col>
       ))}
     </Grid>
-  </nav>
+  </Box>
 )
 
 const Container = (props: ContainerProps) => {
@@ -68,6 +69,11 @@ const Container = (props: ContainerProps) => {
 }
 
 const useStyles = createStyles((theme) => ({
+  wrapper: {
+    borderTop: '1px solid',
+    borderColor: theme.colors.dark?.[0],
+    backgroundColor: 'white',
+  },
   item: {
     cursor: 'pointer',
     transition: 'background-color 0.2s ease-in-out',

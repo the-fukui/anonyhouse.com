@@ -10,6 +10,7 @@ questions:
 # `packages/web/components/{{ inputs.name | pascal }}/index.tsx`
 
 ```tsx
+import { createStyles } from '@mantine/core'
 import React from 'react'
 
 type ContainerProps = {
@@ -23,9 +24,13 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({className}) => (
 const Container = (props: ContainerProps) => {
   /** Logic here */
 
+  // const { classes } = useStyles()
+
   const presenterProps = {}
   return { ...props, ...presenterProps }
 }
+
+const useStyles = createStyles((theme) => ({}))
 
 export default function {{ inputs.name | pascal }}(props: ContainerProps) {
   return <Presenter {...Container(props)} />
