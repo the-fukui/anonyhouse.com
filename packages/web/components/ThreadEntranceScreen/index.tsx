@@ -3,7 +3,9 @@ import { useLoadingScreen } from '@web/hooks/useLoadingScreen'
 import { useThread } from '@web/hooks/useThread'
 import { useUserMedia } from '@web/hooks/useUserMedia'
 
+import { Button, Grid, Paper, Text, createStyles } from '@mantine/core'
 import { useModals } from '@mantine/modals'
+
 import React, { useEffect, useRef, useState } from 'react'
 
 type ContainerProps = {
@@ -18,13 +20,28 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   isEnterButtonDisabled,
   onEnter,
   openEmojiPickerModal,
+  classes,
 }) => (
-  <div className={`${className}`}>
-    <button onClick={openEmojiPickerModal}>{myAvatar}</button>
-    <button onClick={onEnter} disabled={isEnterButtonDisabled}>
-      initialConnect
-    </button>
-  </div>
+  <Grid className={`${className}`} p={16} m={0}>
+    <Grid.Col span={4} offset={4}>
+      <Text size="md" weight="bold">
+        あなたの絵文字
+      </Text>
+      <Button
+        compact
+        p={8}
+        onClick={openEmojiPickerModal}
+        className={classes.avatar}
+      >
+        {myAvatar}
+      </Button>
+    </Grid.Col>
+    <Grid.Col span={12}>
+      <button onClick={onEnter} disabled={isEnterButtonDisabled}>
+        initialConnect
+      </button>
+    </Grid.Col>
+  </Grid>
 )
 
 const Container = (props: ContainerProps) => {
@@ -77,15 +94,28 @@ const Container = (props: ContainerProps) => {
     })
   }
 
+  const { classes } = useStyles()
+
   const presenterProps = {
     setMyAvatar,
     myAvatar,
     isEnterButtonDisabled,
     onEnter,
     openEmojiPickerModal,
+    classes,
   }
   return { ...props, ...presenterProps }
 }
+
+const useStyles = createStyles((theme) => ({
+  avatar: {
+    aspectRatio: '1/1',
+    backgroundColor: theme.colors.background?.[0],
+    width: '100%',
+    height: 'auto',
+    fontSize: 'calc(100vw/8)',
+  },
+}))
 
 export default function ThreadEntranceScreen(props: ContainerProps) {
   return <Presenter {...Container(props)} />

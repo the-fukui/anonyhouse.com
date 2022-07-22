@@ -4,14 +4,17 @@ import ThreadUserList from '@web/components/ThreadUserList'
 import { useGetThread } from '@web/hooks/useThread'
 import { ThreadRepository } from '@web/repository/thread'
 
+import { Affix, Box, Stack, createStyles } from '@mantine/core'
+
 import type { GetStaticPaths, GetStaticPropsContext } from 'next'
 import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   thread,
   isEntered,
+  classes,
 }) => (
-  <div>
+  <Stack justify={'flex-end'} className={classes.stack}>
     <h1>{thread.title}</h1>
     <div>{JSON.stringify(thread.tags)}</div>
     <div>定員:{thread.capacity}人</div>
@@ -21,17 +24,22 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
         <ThreadControl />
       </>
     ) : (
-      <ThreadEntranceScreen threadID={thread.ID} />
+      <Box className={classes.entranceScreen}>
+        <ThreadEntranceScreen threadID={thread.ID} />
+      </Box>
     )}
-  </div>
+  </Stack>
 )
 
 const Container = (props: PageContainerProps<typeof getStaticProps>) => {
   const { status: threadStatus } = useGetThread()
   const isEntered = threadStatus === 'ok'
 
+  const { classes } = useStyles()
+
   const presenterProps = {
     isEntered,
+    classes,
   }
   return { ...props, ...presenterProps }
 }
@@ -65,6 +73,16 @@ export const getStaticPaths: GetStaticPaths = () => {
     fallback: 'blocking',
   }
 }
+
+const useStyles = createStyles((theme) => ({
+  stack: {
+    height: '100%',
+  },
+  entranceScreen: {
+    boxShadow: theme.shadows.xl,
+    backgroundColor: 'white',
+  },
+}))
 
 export default function ThreadId(
   props: PageContainerProps<typeof getStaticProps>,

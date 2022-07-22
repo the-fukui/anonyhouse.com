@@ -45,10 +45,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             <RecoilRoot>
               <Stack spacing={0} className={classes.stack}>
                 <Header />
-                <Box sx={{ flex: 1, height: '100%' }} component="main">
+                <Box className={classes.main} component="main">
                   <Component {...pageProps} />
                 </Box>
-                <NavigationBottom />
+                <Box className={classes.navigation}>
+                  <NavigationBottom />
+                </Box>
               </Stack>
               <LoadingScreen />
             </RecoilRoot>
@@ -62,6 +64,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 const useStyles = createStyles((theme) => ({
   stack: {
     height: ['100vh', '100dvh'],
+  },
+  main: { flex: 1, height: '100%', position: 'relative' },
+  navigation: {
+    position: 'relative',
+    zIndex: 1,
   },
 }))
 
