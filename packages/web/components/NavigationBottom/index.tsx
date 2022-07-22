@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Text } from '@mantine/core'
+import { Box, Grid, Stack, Text, createStyles } from '@mantine/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -18,6 +18,8 @@ const NAVIGATIONS = [
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({
   className,
   currentItemName,
+  classes,
+  cx,
 }) => (
   <nav className={`${className}`}>
     <Grid>
@@ -25,20 +27,10 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
         <Grid.Col
           span={12 / NAVIGATIONS.length}
           key={navigation.href}
-          sx={(theme) => ({
-            cursor: 'pointer',
-            backgroundColor:
-              navigation.name === currentItemName
-                ? theme.colors.gray?.[2]
-                : undefined,
-            transition: 'background-color 0.2s ease-in-out',
-            ':hover':
-              navigation.name === currentItemName
-                ? {}
-                : {
-                    backgroundColor: theme.colors.gray?.[3],
-                  },
-          })}
+          className={cx(
+            classes.item,
+            navigation.name === currentItemName && classes.itemActive,
+          )}
         >
           <Link href={navigation.href}>
             <Box component="a">
@@ -65,11 +57,28 @@ const Container = (props: ContainerProps) => {
     asPath.startsWith(navigation.href),
   ).reduce((a, b) => (a.href?.length > b.href?.length ? a : b)).name
 
+  const { classes, cx } = useStyles()
+
   const presenterProps = {
     currentItemName,
+    classes,
+    cx,
   }
   return { ...props, ...presenterProps }
 }
+
+const useStyles = createStyles((theme) => ({
+  item: {
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease-in-out',
+    ':hover': {
+      backgroundColor: theme.colors.gray?.[3],
+    },
+  },
+  itemActive: {
+    backgroundColor: theme.colors.gray?.[2],
+  },
+}))
 
 export default function NavigationBottom(props: ContainerProps) {
   return <Presenter {...Container(props)} />
