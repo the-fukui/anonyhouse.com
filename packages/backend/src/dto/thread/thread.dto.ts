@@ -6,6 +6,7 @@ import {
 } from '@shared/constants/thread'
 
 import { ThreadModel } from '@backend/src/entity/thread/thread.model'
+import { ThreadTagModel } from '@backend/src/entity/threadTag/threadTag.model'
 import { ThreadUserModel } from '@backend/src/entity/threadUser/threadUser.model'
 
 import {
@@ -47,7 +48,7 @@ export class CreateThreadDto {
 export class GetThreadDto {
   ID: string
   title: string
-  tags: RTDB.ThreadTagUnion[]
+  tags: ThreadTagModel[]
   capacity: number
   users: {
     avatar: string
@@ -57,11 +58,12 @@ export class GetThreadDto {
   static fromEntity(
     threadEntity: ThreadModel,
     threadUserEntities: ThreadUserModel[],
+    threadTagEntities: ThreadTagModel[],
   ) {
     const Dto = new GetThreadDto()
     Dto.ID = threadEntity.ID
     Dto.title = threadEntity.title
-    Dto.tags = threadEntity.tags
+    Dto.tags = threadTagEntities
     Dto.capacity = threadEntity.capacity
     Dto.timestamp = threadEntity.timestamp
     Dto.users = threadUserEntities.map((user) => ({ avatar: user.avatar }))

@@ -2,14 +2,7 @@ import Tag from '@web/components/Tag'
 
 import { TAG_GROUPS, TAG_ITEMS } from '@shared/constants/thread'
 
-import {
-  List,
-  ListItem,
-  ScrollArea,
-  Text,
-  Title,
-  createStyles,
-} from '@mantine/core'
+import { List, ScrollArea, Title, createStyles } from '@mantine/core'
 
 import Link from 'next/link'
 import React, { useCallback } from 'react'
@@ -35,7 +28,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
           type="always"
         >
           <List listStyleType={'none'} className={classes.tagList}>
-            {tagsByGroup(group.slug).map((tag, i) => (
+            {tagsByGroup(group.slug).map((tag) => (
               <List.Item key={tag.slug}>
                 <Link href={`/tags/${tag.slug}`}>
                   <Tag
@@ -71,7 +64,7 @@ const Container = (props: ContainerProps) => {
   return { ...props, ...presenterProps }
 }
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   tagList: {
     display: 'flex',
     ':last-child': {

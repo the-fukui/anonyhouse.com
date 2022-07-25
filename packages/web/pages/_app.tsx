@@ -3,7 +3,6 @@ import LoadingScreen from '@web/components/LoadingScreen'
 import NavigationBottom from '@web/components/NavigationBottom'
 
 import {
-  Affix,
   Box,
   Global,
   MantineProvider,
@@ -31,6 +30,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             background: ['#F4F5F7'],
           },
           primaryColor: 'gray',
+          fontSizes: {
+            xxs: '10px',
+          },
         }}
       >
         <Global
@@ -61,7 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   stack: {
     height: ['100vh', '100dvh'],
   },

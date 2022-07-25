@@ -1,3 +1,5 @@
+import Tag from '@web/components/Tag'
+
 import {
   Box,
   Group,
@@ -7,6 +9,7 @@ import {
   Text,
   createStyles,
 } from '@mantine/core'
+
 import Link from 'next/link'
 import React from 'react'
 import { FaUser } from 'react-icons/fa'
@@ -18,6 +21,12 @@ type ContainerProps = {
     title: string
     capacity: number
     users: { avatar: string }[]
+    tags: {
+      slug: string
+      label: string
+      icon: string
+      group: string
+    }[]
   }[]
 }
 
@@ -29,13 +38,25 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 }) => (
   <List className={`${className}`} listStyleType={'none'}>
     {threads.map((thread, i) => (
-      <ListItem key={thread.ID} className={classes.item}>
+      <List.Item key={thread.ID} className={classes.item}>
         <Link href={`/threads/${thread.ID}/`}>
           <Box component="a" className={classes.link} px={16} py={8}>
             <Text size="lg" weight="bold">
               {thread.title}
             </Text>
             <Group spacing={8}>
+              <List listStyleType={'none'}>
+                {thread.tags.map((tag) => (
+                  <List.Item key={tag.slug}>
+                    <Tag
+                      key={tag.slug}
+                      label={tag.label}
+                      icon={tag.icon}
+                      size="sm"
+                    />
+                  </List.Item>
+                ))}
+              </List>
               <Text size="lg" lineClamp={5} className={classes.avatars}>
                 {getAvatars(thread.users)}
               </Text>
@@ -48,7 +69,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
             </Group>
           </Box>
         </Link>
-      </ListItem>
+      </List.Item>
     ))}
   </List>
 )
@@ -79,6 +100,7 @@ const useStyles = createStyles((theme, _, getRef) => ({
   },
   avatars: {
     flex: 1,
+    textAlign: 'right',
     ':empty': {
       ':after': {
         content: '" "',
