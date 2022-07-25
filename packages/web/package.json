@@ -33,6 +33,6 @@
     "@types/react": "18.0.15",
     "@types/simple-peer": "^9.11.4",
     "eslint-config-next": "12.2.3",
-    "sass": "^1.53.0"
+    "sass": "^1.54.0"
   }
 }
