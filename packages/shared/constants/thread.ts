@@ -5,7 +5,7 @@ export const TAG_ITEMS = [
   { slug: 'japanese', label: '日本語', icon: '🇯🇵', group: 'language' },
   {
     slug: 'basketball',
-    label: 'バスケットボール🏀',
+    label: 'バスケットボール',
     icon: '🏀',
     group: 'sports',
   },

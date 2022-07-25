@@ -3,7 +3,7 @@ import { Box, Grid, Stack, Text, createStyles } from '@mantine/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { FaListUl, FaPlus, FaThLarge, FaTools } from 'react-icons/fa'
+import { FaHashtag, FaListUl, FaPlus, FaTools } from 'react-icons/fa'
 
 type ContainerProps = {
   className?: string
@@ -11,7 +11,7 @@ type ContainerProps = {
 
 const NAVIGATIONS = [
   { name: 'スレッド', href: '/', icon: FaListUl },
-  { name: 'カテゴリ一覧', href: '/categories', icon: FaThLarge },
+  { name: 'タグ一覧', href: '/tags', icon: FaHashtag },
   { name: 'スレッド作成', href: '/threads/create', icon: FaPlus },
   { name: '設定', href: '/setting', icon: FaTools },
 ]

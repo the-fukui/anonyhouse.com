@@ -17,6 +17,7 @@ import {
   TextInput,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
+
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
@@ -39,6 +40,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
       onInput={form.validate}
     />
     <MultiSelect
+      required
       label="タグ"
       placeholder="タグを選択してください"
       searchable
@@ -51,6 +53,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
           TAG_GROUPS.find((group) => group.slug === item.group)?.label ||
           'その他',
       }))}
+      mt="lg"
       {...form.getInputProps('tags')}
     />
     <NumberInput
@@ -58,9 +61,10 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
       label="参加可能人数"
       max={20}
       min={2}
+      mt="lg"
       {...form.getInputProps('capacity')}
     />
-    <Group position="center" mt="md">
+    <Group position="center" mt="lg">
       <Button disabled={!canSubmit} type="submit">
         作成
       </Button>
@@ -82,7 +86,7 @@ const Container = (props: ContainerProps) => {
         return null
       },
       tags: (value) => {
-        if (value.length === 0) return 'タグを入力してください'
+        if (value.length === 0) return 'タグを選択してください'
         if (value.length > MAX_TAGS_LENGTH) return 'タグは5つまでです'
         return null
       },

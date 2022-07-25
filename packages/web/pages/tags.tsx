@@ -1,4 +1,4 @@
-import ThreadCreateForm from '@web/components/ThreadCreateForm'
+import TagList from '@web/components/TagList'
 
 import { Container as PageContainer, Text, Title } from '@mantine/core'
 
@@ -6,11 +6,11 @@ import type { GetStaticPropsContext } from 'next'
 import React from 'react'
 
 const Presenter: React.FC<PresenterProps<typeof Container>> = ({}) => (
-  <PageContainer fluid px={16}>
+  <PageContainer px={16}>
     <Title order={2} align="center" my="42px">
-      スレッドを作成
+      タグ一覧
     </Title>
-    <ThreadCreateForm />
+    <TagList />
   </PageContainer>
 )
 
@@ -26,9 +26,13 @@ export const getStaticProps = async ({}: GetStaticPropsContext) => {
     props: {},
     revalidate: 60,
   }
+
+  // return {
+  //   notFound:true
+  // } as const
 }
 
-export default function Create(
+export default function Categories(
   props: PageContainerProps<typeof getStaticProps>,
 ) {
   return <Presenter {...Container(props)} />
