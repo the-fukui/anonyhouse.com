@@ -1369,12 +1369,13 @@
   dependencies:
     "@mantine/ssr" "4.2.12"
 
-"@mantine/notifications@^4.2.12":
-  version "4.2.12"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.12.tgz#914cf8efcae7a897c1075f09a39a730a505a02ed"
-  integrity sha512-Ip+8KxH9P1i8uZnhv2zTU+OFJjYBs3122KnVYy6vLsR83agRuY1KzbxjlOVVmP2Dq5aJX2pvefWWjA++NzhNtA==
+"@mantine/notifications@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.0.0.tgz#27d5dcb60ffccd305974105fa949b1d7278a4a61"
+  integrity sha512-uM/VJBrU2WGx0ji1z/y0Ov6qOMwB5+OJuRfujHpwaRv9hnDxIiesgZlkOS4MS67R4TWZRPuAUNdkccVTFNoRCA==
   dependencies:
-    react-transition-group "^4.4.2"
+    "@mantine/utils" "5.0.0"
+    react-transition-group "4.4.2"
 
 "@mantine/ssr@4.2.12":
   version "4.2.12"
@@ -1401,6 +1402,11 @@
     "@emotion/utils" "1.0.0"
     clsx "^1.1.1"
     csstype "3.0.9"
+
+"@mantine/utils@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.0.0.tgz#576ebab6b0980b996ecb70b277f4ea378dcfb474"
+  integrity sha512-Fy9BdxWvrXkplWua8ZKmsBQODo24QB8OPn6BEmvXUt4O+3qoP27VaAWQVea4opWZsy+L5dtEe/kOXY/Q/kC2qg==
 
 "@nestjs/cli@^9.0.0":
   version "9.0.0"
@@ -8894,7 +8900,7 @@ react-textarea-autosize@^8.3.2:
     use-composed-ref "^1.3.0"
     use-latest "^1.2.1"
 
-react-transition-group@^4.4.2:
+react-transition-group@4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.2.tgz#8b59a56f09ced7b55cbd53c36768b922890d5470"
   integrity sha512-/RNYfRAMlZwDSr6z4zNKV6xu53/e2BuaBbGhbyYIXTrmgu/bGHzmqOs7mJSJBHy9Ud+ApHx3QjrkKSp1pxvlFg==
