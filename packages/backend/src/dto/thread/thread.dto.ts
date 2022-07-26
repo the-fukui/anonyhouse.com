@@ -34,7 +34,7 @@ export class CreateThreadDto {
 
   @IsArray()
   @ArrayMaxSize(MAX_TAGS_LENGTH)
-  @ArrayMinSize(1)
+  // @ArrayMinSize(1)
   @ArrayUnique()
   @IsIn(TAG_ITEMS.map((item) => item.slug), { each: true })
   tags: RTDB.ThreadTagUnion[]

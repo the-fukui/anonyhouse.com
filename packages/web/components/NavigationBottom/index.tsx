@@ -11,7 +11,7 @@ type ContainerProps = {
 
 const NAVIGATIONS = [
   { name: 'スレッド', href: '/', icon: FaListUl },
-  { name: 'タグ一覧', href: '/tags', icon: FaHashtag },
+  // { name: 'タグ一覧', href: '/tags', icon: FaHashtag },
   { name: 'スレッド作成', href: '/threads/create', icon: FaPlus },
   { name: '設定', href: '/setting', icon: FaTools },
 ]

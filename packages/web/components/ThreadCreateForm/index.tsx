@@ -39,7 +39,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
       {...form.getInputProps('title')}
       onInput={form.validate}
     />
-    <MultiSelect
+    {/* <MultiSelect
       required
       label="タグ"
       placeholder="タグを選択してください"
@@ -55,7 +55,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
       }))}
       mt="lg"
       {...form.getInputProps('tags')}
-    />
+    /> */}
     <NumberInput
       required
       label="参加可能人数"
@@ -85,11 +85,11 @@ const Container = (props: ContainerProps) => {
         if (value.length > MAX_TITLE_LENGTH) return 'タイトルが長すぎます'
         return null
       },
-      tags: (value) => {
-        if (value.length === 0) return 'タグを選択してください'
-        if (value.length > MAX_TAGS_LENGTH) return 'タグは5つまでです'
-        return null
-      },
+      // tags: (value) => {
+      //   if (value.length === 0) return 'タグを選択してください'
+      //   if (value.length > MAX_TAGS_LENGTH) return 'タグは5つまでです'
+      //   return null
+      // },
       capacity: (value) =>
         value <= 20 && 1 < value ? null : '2~20人の範囲で指定してください',
     },

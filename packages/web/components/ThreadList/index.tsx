@@ -1,6 +1,7 @@
 import Tag from '@web/components/Tag'
 
 import {
+  Avatar,
   Box,
   Group,
   List,
@@ -45,7 +46,7 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
               {thread.title}
             </Text>
             <Group spacing={8}>
-              <List listStyleType={'none'}>
+              {/* <List listStyleType={'none'}>
                 {thread.tags.map((tag) => (
                   <List.Item key={tag.slug}>
                     <Tag
@@ -56,10 +57,19 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
                     />
                   </List.Item>
                 ))}
-              </List>
-              <Text size="lg" lineClamp={5} className={classes.avatars}>
-                {getAvatars(thread.users)}
-              </Text>
+              </List> */}
+              <Avatar.Group className={classes.avatars} spacing={8}>
+                {getAvatars(thread.users).map((avatar, i) => (
+                  <Avatar key={i} radius="xl" size="sm">
+                    <Text size="xl">{avatar}</Text>
+                  </Avatar>
+                ))}
+                {thread.users.length > 10 && (
+                  <Avatar key={i} radius="xl" size="sm">
+                    <Text size="sm">+{thread.users.length - 10}</Text>
+                  </Avatar>
+                )}
+              </Avatar.Group>
               <FaUser size={15} />
               <Text size="sm" component={Group} spacing={4}>
                 {thread.users.length || '0'}
@@ -77,7 +87,8 @@ const Presenter: React.FC<PresenterProps<typeof Container>> = ({
 const Container = (props: ContainerProps) => {
   //参加者表示用アバター配列を取得
   const getAvatars = (users: { avatar: string }[]) => {
-    return users.map((user) => user.avatar)
+    // return users.map((user) => user.avatar)
+    return ['😇', '😭', '👨‍👩‍👦', '👨‍👨‍👦‍👦', '🚭', '🏄🏼‍♀️']
   }
 
   const { classes } = useStyles()

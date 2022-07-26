@@ -11,9 +11,8 @@ namespace RTDB {
       [key: threadID]: {
         timestamp: number
         title: string
-        tags: ThreadTagUnion[]
+        tags?: ThreadTagUnion[]
         capacity: number
-        users: userID[]
       }
     }
     users: {
