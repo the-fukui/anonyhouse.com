@@ -1401,12 +1401,12 @@
     "@mantine/ssr" "5.0.2"
     "@mantine/styles" "5.0.2"
 
-"@mantine/notifications@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.0.0.tgz#27d5dcb60ffccd305974105fa949b1d7278a4a61"
-  integrity sha512-uM/VJBrU2WGx0ji1z/y0Ov6qOMwB5+OJuRfujHpwaRv9hnDxIiesgZlkOS4MS67R4TWZRPuAUNdkccVTFNoRCA==
+"@mantine/notifications@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.0.2.tgz#4fec5629cc95bebcc44816e0dc33184dfa281aca"
+  integrity sha512-EicBoabJAV2G9y/g+/id76ERfz9ap+veN5rd3gkuYJssYnm98kfbgO73pLLm7ZaacNEGNlqWIIN2OYLcaoQ4Dw==
   dependencies:
-    "@mantine/utils" "5.0.0"
+    "@mantine/utils" "5.0.2"
     react-transition-group "4.4.2"
 
 "@mantine/ssr@5.0.2":
