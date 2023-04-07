@@ -2199,10 +2199,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@18.0.27":
-  version "18.0.27"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.27.tgz#d9425abe187a00f8a5ec182b010d4fd9da703b71"
-  integrity sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==
+"@types/react@18.0.28":
+  version "18.0.28"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.28.tgz#accaeb8b86f4908057ad629a26635fe641480065"
+  integrity sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -10879,9 +10879,9 @@ vfile@^4.0.0:
     vfile-message "^2.0.0"
 
 vm2@^3.9.8:
-  version "3.9.11"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.11.tgz#a880f510a606481719ec3f9803b940c5805a06fe"
-  integrity sha512-PFG8iJRSjvvBdisowQ7iVF580DXb1uCIiGaXgm7tynMR1uTBlv7UJlB1zdv5KJ+Tmq1f0Upnj3fayoEOPpCBKg==
+  version "3.9.15"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.15.tgz#c544e6a9bc31e4e40d2e5f532342cf799ea56a6e"
+  integrity sha512-XqNqknHGw2avJo13gbIwLNZUumvrSHc9mLqoadFZTpo3KaNEJoe1I0lqTFhRXmXD7WkLyG01aaraXdXT0pa4ag==
   dependencies:
     acorn "^8.7.0"
     acorn-walk "^8.2.0"
