@@ -51,7 +51,7 @@
     "prettier": "^2.7.1",
     "prettier-plugin-scaffdog": "^1.5.0",
     "scaffdog": "^1.5.0",
-    "stylelint": "^14.9.1",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^26.0.0",
     "stylelint-order": "^5.0.0",
     "typescript": "^4.7.4"
